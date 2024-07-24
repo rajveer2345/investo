@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #F6FF81;
+  --secondary: #63AE9E;
+  --tertiary: #D8E2E1;
+  --quarter: #F5F8F8;
+  --primelight: rgba(246, 255, 129, 0.5);
+  --secondlight: rgba(99,174,158, 0.5);
+}
+
+.theme-light {
+  --primary: #3490dc;
+  --secondary: #ffed4a;
+  --tertiary: #e3342f;
+}
+
+.theme-dark {
+  --primary: #2d3748;
+  --secondary: #38b2ac;
+  --tertiary: #ed64a6;
+}
+
+.theme-colorful {
+  --primary: #9f7aea;
+  --secondary: #f6ad55;
+  --tertiary: #48bb78;
+}
