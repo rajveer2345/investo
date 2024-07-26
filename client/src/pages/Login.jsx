@@ -9,7 +9,7 @@ function Login() {
 
             <div className='relative bg-white h-3/4 w-1/2 max-w-[350px] min-w-[300px] hidden rounded-3xl drop-shadow-xl md:flex md:justify-center md:items-center'>
                 <img className='w-64' src={back} alt="" />
-                <div className='bg-white bg-opacity-30 w-full h-full absolute'></div>
+                <div className='bg-white bg-opacity-30 w-full h-full absolute rounded-3xl'></div>
             </div>
             <div className='bg-white h-3/4 w-1/2 max-w-[350px] min-w-[300px] drop-shadow-xl rounded-3xl flex justify-center'>
                 <div id='formbox' className='flex justify-center flex-col items-center'>
