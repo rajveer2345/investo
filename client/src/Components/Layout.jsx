@@ -20,7 +20,11 @@ function Layout() {
   }, [authToken, window.location.pathname]);
 
   return (
+
+
      <Outlet/>
+
+    
   )
 }
 

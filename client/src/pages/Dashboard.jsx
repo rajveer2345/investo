@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Main from '../Components/Main';
-
 import { IoPower } from "react-icons/io5";
 import { IoSettings } from "react-icons/io5";
 import { IoHome } from "react-icons/io5";
@@ -9,12 +8,40 @@ import { IoNotifications } from "react-icons/io5";
 import { IoPersonAdd } from "react-icons/io5";
 import { MdWorkHistory } from "react-icons/md";
 import logo from '../assets/images/logo.svg';
+import Logout from '../Components/Logout';
+import { getUserData } from '../api/user';
 
 
 
 function Dashboard() {
+    const navigate = useNavigate();
+
 
     const [selected, setSelected] = useState(0);
+
+    useEffect(()=>{
+
+        const getUserDetails = async ()=>{
+
+            const data = await getUserData();
+            
+            if(data.message === 'success'){
+                console.log(data)
+            } else {
+                localStorage.clear();
+                navigate('/');
+            }
+
+        }
+        getUserDetails();
+
+    },[])
+
+    const changeSelected=(id)=>{
+        setSelected(id);
+    }
+
+
 
     const icons = [
         { id: 0, icon: <IoHome size={20} />, component: <Main/> },
@@ -22,7 +49,7 @@ function Dashboard() {
         { id: 2, icon: <IoPersonAdd size={20} />, component: '<div>zero</div>' },
         { id: 3, icon: <MdWorkHistory size={20} />, component: '<div>zero</div>' },
         { id: 4, icon: <IoSettings size={20} />, component: '<div>zero</div>' },
-        { id: 5, icon: <IoPower size={20} />, component: '<div>zero</div>' },
+        { id: 5, icon: <IoPower size={20} />, component: <Logout setSelected={changeSelected}/> },
     ];
 
     return (

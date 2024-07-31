@@ -1,15 +1,58 @@
-const mongoose=require('mongoose');
-const userSchema=mongoose.Schema({
-    username:{
-        type:String
+const mongoose = require('mongoose');
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
     },
-    email:{
-        type:String
-    }
-    
-},{
-    timestamps:true//record add update kiya to uska time note ho jata hai
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    role: {
+        type: String,
+        required: true,
+        default: 'user',
+    },
+    investmentAmount: {
+        type: Number,
+        default: 0,
+        
+        max: 150000,
+    },
+    earningAmount: {
+        type: Number,
+        default: 0,
+    },
+    referredBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // Reference to another User document
+        default: null,
+    },
+    referrals: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // Array of references to User documents
+        default: [],
+    }],
+    userType: {
+        type: String,
+        enum: ['Silver', 'Gold', 'Platinum'],
+        default: 'Silver',
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    verificationToken: {
+        type: String,
+    },
+}, {
+    timestamps: true
 });
 
-const user=mongoose.model('user',userSchema);
-module.exports=user;
+const user = mongoose.model('user', userSchema);
+module.exports = user;

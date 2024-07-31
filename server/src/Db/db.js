@@ -3,16 +3,11 @@ const mongoose = require('mongoose');
 const reconnectTimeout = 5000; // ms
 dotenv.config({path: '.env'})
 const mongoUrl = process.env.DB_URL;
-console.log(mongoUrl)
+
 
 function connect() {
 
-    mongoose.connect(mongoUrl, {
-        useNewUrlParser: true,
-
-        useUnifiedTopology: true,
-
-    });
+    mongoose.connect(mongoUrl);
 }
 const db = mongoose.connection;
 

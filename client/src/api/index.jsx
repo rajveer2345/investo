@@ -1,9 +1,12 @@
 import axios from 'axios';
 
+const token = localStorage.getItem('token');
 const apiClient = axios.create({
-  baseURL: 'https://catfact.ninja',
+  //baseURL: 'http://localhost:4000',
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
   },
   timeout: 10000, 
 });
