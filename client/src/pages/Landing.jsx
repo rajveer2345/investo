@@ -3,6 +3,7 @@ import landing from '../assets/images/landing1.jpg'
 import Navbar from '../Components/Navbar'
 import Login from './Login'
 import Signup from './Signup'
+import Footer from '../Components/Footer'
 
 function Landing() {
     const [isLogin, setIsLogin] = useState(true);
@@ -61,8 +62,9 @@ function Landing() {
                 <section id="section3" className="h-screen bg-gray-300 flex items-center justify-center">
                     <h1 className="text-4xl">Services</h1>
                 </section>
-                <section id="section4" className="h-screen bg-gray-300 flex items-center justify-center">
-                    <h1 className="text-4xl">Contact</h1>
+                <section id="section4" className="h-screen bg-gray-300 w-full flex items-end">
+                    
+                    <Footer/>
                 </section>
             </main>
 
