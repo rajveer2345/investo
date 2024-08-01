@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-
+import logo from '../assets/images/Mediaicon.ico'
 const Navbar = () => {
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState('section1');
 
   const handleScroll = () => {
     console.log(window.scrollY)
     const sections = document.querySelectorAll('section');
     let current = '';
-    
+
     sections.forEach(section => {
       const sectionTop = section.offsetTop;
       const sectionHeight = section.clientHeight;
@@ -25,26 +25,41 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-gray-800 text-white py-4">
-      <div className="container mx-auto flex justify-center space-x-4">
-        <a
-          href="#section1"
-          className={`px-4 py-2 ${activeSection === 'section1' ? 'bg-blue-500' : 'hover:bg-blue-700'}`}
-        >
-          Section 1
-        </a>
-        <a
-          href="#section2"
-          className={`px-4 py-2 ${activeSection === 'section2' ? 'bg-blue-500' : 'hover:bg-blue-700'}`}
-        >
-          Section 2
-        </a>
-        <a
-          href="#section3"
-          className={`px-4 py-2 ${activeSection === 'section3' ? 'bg-blue-500' : 'hover:bg-blue-700'}`}
-        >
-          Section 3
-        </a>
+    <nav className="fixed top-0 left-0 w-full bg-secondary text-white py-2 sm:px-8 px-1 text-xs font-poppins font-medium box-border z-50">
+      <div className="flex justify-between">
+
+        <img className='w-12 rounded-md me-1' src={logo} alt="logo" />
+
+        <div className='flex justify-between sm:gap-3 gap-0 items-center'>
+
+          <a
+            href="#section1"
+            className={`px-4 py-2 rounded-full ${activeSection === 'section1' ? 'bg-primary text-black border border-primary' : 'hover:border border-primary'}`}
+          >
+            Home
+          </a>
+          <a
+            href="#section2"
+            className={`px-4 py-2 rounded-full ${activeSection === 'section2' ? 'bg-primary text-black' : 'hover:border border-primary'}`}
+          >
+            About
+          </a>
+          <a
+            href="#section3"
+            className={`px-4 py-2 rounded-full ${activeSection === 'section3' ? 'bg-primary text-black' : 'hover:border border-primary'}`}
+          >
+            Services
+          </a>
+          <a
+            href="#section4"
+            className={`px-4 py-2 rounded-full ${activeSection === 'section4' ? 'bg-primary text-black' : 'hover:border border-primary'}`}
+          >
+            Contact
+          </a>
+
+        </div>
+
+
       </div>
     </nav>
   );

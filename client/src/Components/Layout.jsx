@@ -12,7 +12,7 @@ function Layout() {
   useEffect(() => {
       const routeObj = routes.find((item, i) => item.path === path);
       setRoute(routeObj);
-      if ( authToken && (path === '/' || path === '/signup')) {
+      if ( authToken && (path === '/')) {
           navigate("/dashboard");
       } else if (!authToken && path === '/dashboard') {
           navigate("/");
