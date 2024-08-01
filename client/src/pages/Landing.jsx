@@ -39,7 +39,7 @@ function Landing() {
                                     <button onClick={()=>setIsLogin(true)} className={`w-1/2 h-8 text-black text-sm font-semibold rounded-3xl ${isLogin? 'bg-primary': 'bg-white'}`}>Login</button>
                                     <button onClick={()=>setIsLogin(false)} className={`w-1/2 h-8 text-black text-sm font-semibold rounded-3xl ${isLogin? 'bg-white': 'bg-primary'}`}>Signup</button>
                                 </div>
-                                <div className='sm:px-10 px-2'>
+                                <div className='sm:px-10 px-6'>
 
                                     {isLogin? <Login/> : <Signup/>}
                               
