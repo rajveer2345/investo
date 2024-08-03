@@ -34,7 +34,7 @@ const Navbar = () => {
 
           <a
             href="#section1"
-            className={`px-4 py-2 rounded-full ${activeSection === 'section1' ? 'bg-primary text-black border border-primary' : 'hover:border border-primary'}`}
+            className={`px-4 py-2 rounded-full ${activeSection === 'section1' ? 'bg-primary text-black' : 'hover:border border-primary'}`}
           >
             Home
           </a>

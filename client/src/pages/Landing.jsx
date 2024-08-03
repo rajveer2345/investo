@@ -4,12 +4,15 @@ import Navbar from '../Components/Navbar'
 import Login from './Login'
 import Signup from './Signup'
 import Footer from '../Components/Footer'
+import Contact from '../Components/Contact'
+import Testimonial from '../Components/Testimonial'
+import About from '../Components/About'
 
 function Landing() {
     const [isLogin, setIsLogin] = useState(true);
     return (
 
-        <div className='relative'>
+        <div className='relative font-poppins'>
             <Navbar />
             <main className="">
                 <section id="section1" style={{ backgroundImage: `url(${landing})` }} className='w-full sm:h-screen bg-center bg-cover relative z-0'>
@@ -37,18 +40,18 @@ function Landing() {
 
                             <div id='loginSignupBox' className='flex flex-col z-10 max-w-[350px] bg-quarter rounded-3xl mt-10'>
                                 <div className='w-[80%] mt-8 mx-auto border border-gray-200 rounded-3xl bg-white p-1'>
-                                    <button onClick={()=>setIsLogin(true)} className={`w-1/2 h-8 text-black text-sm font-semibold rounded-3xl ${isLogin? 'bg-primary': 'bg-white'}`}>Login</button>
-                                    <button onClick={()=>setIsLogin(false)} className={`w-1/2 h-8 text-black text-sm font-semibold rounded-3xl ${isLogin? 'bg-white': 'bg-primary'}`}>Signup</button>
+                                    <button onClick={() => setIsLogin(true)} className={`w-1/2 h-8 text-black text-sm font-semibold rounded-3xl ${isLogin ? 'bg-primary' : 'bg-white'}`}>Login</button>
+                                    <button onClick={() => setIsLogin(false)} className={`w-1/2 h-8 text-black text-sm font-semibold rounded-3xl ${isLogin ? 'bg-white' : 'bg-primary'}`}>Signup</button>
                                 </div>
                                 <div className='sm:px-10 px-6'>
 
-                                    {isLogin? <Login/> : <Signup/>}
-                              
+                                    {isLogin ? <Login /> : <Signup />}
+
 
 
                                 </div>
 
-                               
+
 
                             </div>
 
@@ -56,15 +59,22 @@ function Landing() {
 
                     </div>
                 </section>
-                <section id="section2" className="h-screen bg-gray-200 flex items-center justify-center">
-                    <h1 className="text-4xl">About</h1>
+                <section id="section2" className="h-screen bg-quarter">
+                   
+                    <About/>
+
+
                 </section>
-                <section id="section3" className="h-screen bg-gray-300 flex items-center justify-center">
-                    <h1 className="text-4xl">Services</h1>
-                </section>
-                <section id="section4" className="h-screen bg-gray-300 w-full flex items-end">
+                <section id="section3" className="h-screen bg-tertiary flex items-center justify-center">
                     
-                    <Footer/>
+                    <Contact />
+                </section>
+                <section id="section4" className=" bg-quarter w-full flex flex-col justify-end">
+
+            
+                    <Testimonial />
+
+                    <Footer />
                 </section>
             </main>
 
