@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Loader from '../Components/Loader'
 
 
-import landing from '../assets/images/landing1.jpg'
+import landing from '../assets/images/124650.jpg'
 import Navbar from '../Components/Navbar'
 import Login from './Login'
 import Signup from './Signup'
