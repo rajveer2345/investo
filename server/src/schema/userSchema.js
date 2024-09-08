@@ -24,9 +24,17 @@ const userSchema = new mongoose.Schema({
         
         max: 150000,
     },
-    earningAmount: {
+    referralEarning: {
         type: Number,
         default: 0,
+    },
+    investmentEarning: {
+        type: Number,
+        default: 0,
+    },
+    referralId: {
+          type: String,
+          required: true
     },
     referredBy: {
         type: mongoose.Schema.Types.ObjectId,
@@ -40,8 +48,8 @@ const userSchema = new mongoose.Schema({
     }],
     userType: {
         type: String,
-        enum: ['Silver', 'Gold', 'Platinum'],
-        default: 'Silver',
+        enum: ['silver', 'gold', 'platinum'],
+        default: 'silver',
     },
     isVerified: {
         type: Boolean,

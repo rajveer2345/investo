@@ -28,8 +28,6 @@ function Footer() {
                     <FaTwitterSquare size={20} />
                     <FaLinkedin size={20} />
                     <FaYoutube size={20} />
-
-
                 </div>
 
 

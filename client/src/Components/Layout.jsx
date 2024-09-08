@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { Outlet, useNavigate } from "react-router-dom";
 import routes from '../utils/routes';
+import { Toaster } from 'react-hot-toast';
 
 function Layout() {
   const navigate = useNavigate();
@@ -21,8 +22,13 @@ function Layout() {
 
   return (
 
+    <>
+         <Toaster/>
+         <Outlet/>
+    </>
 
-     <Outlet/>
+
+
 
     
   )

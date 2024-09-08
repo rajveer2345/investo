@@ -25,7 +25,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-secondary text-white py-2 sm:px-8 px-1 text-xs font-poppins font-medium box-border z-50">
+    <nav className="fixed top-0 left-0 w-full bg-secondary text-white py-2 sm:px-8 px-1 text-xs font-poppins font-medium box-border z-40">
       <div className="flex justify-between">
 
         <img className='w-12 rounded-md me-1' src={logo} alt="logo" />
@@ -48,13 +48,13 @@ const Navbar = () => {
             href="#section3"
             className={`px-4 py-2 rounded-full ${activeSection === 'section3' ? 'bg-primary text-black' : 'hover:border border-primary'}`}
           >
-            Services
+            Contact
           </a>
           <a
             href="#section4"
             className={`px-4 py-2 rounded-full ${activeSection === 'section4' ? 'bg-primary text-black' : 'hover:border border-primary'}`}
           >
-            Contact
+            Testimonials
           </a>
 
         </div>

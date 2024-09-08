@@ -6,6 +6,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
+const generateReferralId = () => {
+  return crypto.randomBytes(12).toString('hex');
+};
+
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -20,14 +24,25 @@ exports.signup = async (req, res) => {
   try {
     const { name, email } = req.body;
 
-    console.log("signup running", req.body)
-
     let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ message: 'User already exists' });
+    if (user) return res.status(200).json({ message: 'exist' });
     let password = req.body.password;
     password = await bcrypt.hash(password, 12)
     const verificationToken = crypto.randomBytes(32).toString('hex');
-    user = new User({ name, email, password, verificationToken });
+    
+    let referralId = generateReferralId();
+    let referralIdExists = true;
+
+    while (referralIdExists) {
+        const existingUser = await User.findOne({ referralId });
+        if (existingUser) {
+            referralId = generateReferralId(); 
+        } else {
+            referralIdExists = false;
+        }
+    }
+
+    user = new User({ name, email, password,  verificationToken, referralId });
 
     await user.save();
     console.log("user saved")
@@ -39,7 +54,7 @@ exports.signup = async (req, res) => {
       html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
     });
 
-    res.status(201).json({ message: 'User created. Please verify your email.' });
+    res.status(200).json({ message: 'success' });
   } catch (err) {
     res.status(500).json({ message: `Server error: ${err}` });
     console.log("Error: ", err)
@@ -110,20 +125,24 @@ exports.verifyEmail = async (req, res) => {
 exports.getUserData = async (req, res) => {
   console.log('started')
   try {
-    const userId = req.user.id; // ID from the verified JWT token
+    const userId = req.user.id; 
     console.log('userid: ', userId)
-    const user = await User.findById(userId).select('-password -verificationToken'); // Exclude sensitive data
+    const user = await User.findById(userId).select('-password -verificationToken'); 
 
     if (!user) return res.status(200).json({ message: 'User not found' });
 
+    console.log(user, "ghjkl")
+
     res.status(200).json({
       message: 'success',
-      data: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      }
 
+      // data: {
+      //   id: user._id,
+      //   name: user.name,
+      //   email: user.email,
+      // }
+
+      data: user
     });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
