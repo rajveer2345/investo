@@ -13,13 +13,33 @@ import user2 from "../assets/images/user2.jpg";
 import news from "../assets/images/news.png";
 import { IoMdCopy } from "react-icons/io";
 import { BiSolidBadgeDollar } from "react-icons/bi";
+import { getUserCount, getAnalytics } from "../api/user";
 
-function Main({ userData }) {
-  useEffect(() => {
-    if (userData) {
-      console.log(userData, "Updated userData");
-    }
-  }, [userData]);
+function MainAdmin({ userData }) {
+
+   const [userCount, setUserCount] = useState(0)
+   const [totalInvestment, setTotalInvestment] = useState(0)
+   const [analyticsData, setAnalyticsData] = useState({
+    totalInvestment: 0,
+    totalReferralEarning: 0,
+    totalInvestmentEarning: 0,
+    totalUsers: 0
+   })
+
+  async function fetchAnalytics(){
+    const data = await getAnalytics();
+     if(data.message==="success"){
+      setAnalyticsData(data?.data)
+
+     }else{
+
+     }
+  }
+
+
+  useEffect(()=>{
+    fetchAnalytics();
+  },[])
 
   const copyId = async () => {
     try {
@@ -35,22 +55,14 @@ function Main({ userData }) {
         <div className="mb-4 flex flex-col sm:flex-row justify-between gap-2">
           <div className="flex gap-3 items-center">
             <h1 className="text-lg font-semibold text-nowrap">
-              {userData.name}
+              Welcome Admin
             </h1>
             <div>
-              {userData.userType === "silver" ? (
-                <Badge type={"silver"} />
-              ) : userData.userType === "gold" ? (
-                <Badge type={"gold"} />
-              ) : userData.userType === "platinum" ? (
-                <Badge type={"platinum"} />
-              ) : (
-                ""
-              )}
+              
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <div
               id="demo"
               className="items-center border inline-flex border-gray-300 rounded-md overflow-hidden"
@@ -66,14 +78,14 @@ function Main({ userData }) {
                 <IoMdCopy size={20} />
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className=" flex flex-wrap w-full gap-3">
           <div className="px-8 bg-tertiary rounded-3xl flex flex-col items-center justify-center h-48 w-60">
             <h5 className="text-xs font-semibold">Total Investment</h5>
             <h1 className="text-4xl font-semibold mt-5">
-              &#x20b9;{userData?.investmentAmount || 0}
+              {analyticsData.totalInvestment}
             </h1>
 
             <h6 className="font-normal text-xs mt-2">
@@ -90,10 +102,9 @@ function Main({ userData }) {
             </div>
           </div>
           <div className="px-8 bg-tertiary rounded-3xl flex flex-col items-center justify-center h-48 w-60">
-            <h5 className="text-xs font-semibold">Total Earnings</h5>
+            <h5 className="text-xs font-semibold">Total Users</h5>
             <h1 className="text-4xl font-semibold mt-5">
-              &#x20b9;
-              {userData?.investmentEarning + userData?.referralEarning || 0}
+              {analyticsData.totalUsers}
             </h1>
 
             <h6 className="font-normal text-xs mt-2">
@@ -119,7 +130,7 @@ function Main({ userData }) {
               <div className=" flex flex-col justify-center items-start w-full ps-4">
                 <h5 className="text-xs font-semibold">From Refferals</h5>
                 <h2 className="text-3xl">
-                  &#x20b9;{userData?.referralEarning || 0}
+                  &#x20b9;{analyticsData.totalReferralEarning}
                 </h2>
                 <h6 className="font-normal text-xs invisible">
                   + <span className="text-xs font-semibold">&#x20b9;2508</span>{" "}
@@ -136,7 +147,7 @@ function Main({ userData }) {
               <div className=" flex flex-col justify-center items-start w-full ps-4">
                 <h5 className="text-xs font-semibold">From Investments</h5>
                 <h2 className="text-3xl">
-                  &#x20b9;{userData?.investmentEarning || 0}
+                  &#x20b9;{analyticsData.totalInvestmentEarning}
                 </h2>
                 <h6 className="font-normal text-xs invisible">
                   + <span className="text-xs font-semibold">&#x20b9;2508</span>{" "}
@@ -164,24 +175,32 @@ function Main({ userData }) {
                 <h5 className="text-xs font-medium">Total</h5>
               </div>
             </div>
-            {Array.isArray(userData?.referrals) && userData?.referrals.map((referral, index) => {
-              return (
-                <div key={index} className="w-full bg-secondary rounded-3xl flex justify-between p-2 gap-3 items-center">
-                  <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                    <img className="rounded-full w-8 h-8" src={user1} alt="" />
+            {Array.isArray(userData?.referrals) &&
+              userData?.referrals.map((referral, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="w-full bg-secondary rounded-3xl flex justify-between p-2 gap-3 items-center"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white min-w-8">
+                      <img
+                        className="rounded-full w-8 h-8"
+                        src={user1}
+                        alt=""
+                      />
+                    </div>
+                    <div className="w-full text-center ms-3">
+                      <h5 className="text-xs font-medium">{referral?.name}</h5>
+                    </div>
+                    <div className="w-full text-center ms-3">
+                      <h5 className="text-xs font-medium">{referral?.email}</h5>
+                    </div>
+                    <div className="w-full text-center ms-3">
+                      <h5 className="text-xs font-medium">&#x20b9;2350</h5>
+                    </div>
                   </div>
-                  <div className="w-full text-center ms-3">
-                    <h5 className="text-xs font-medium">{referral?.name}</h5>
-                  </div>
-                  <div className="w-full text-center ms-3">
-                    <h5 className="text-xs font-medium">{referral?.email}</h5>
-                  </div>
-                  <div className="w-full text-center ms-3">
-                    <h5 className="text-xs font-medium">&#x20b9;2350</h5>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
             {/* 
             <div className="w-full bg-secondary rounded-3xl flex justify-between p-2 gap-3 items-center">
               <div className="w-8 h-8 rounded-full bg-white min-w-8">
@@ -381,4 +400,4 @@ function Main({ userData }) {
   );
 }
 
-export default Main;
+export default MainAdmin;

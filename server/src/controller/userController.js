@@ -1,90 +1,89 @@
-const User = require('../schema/userSchema');
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
+const User = require("../schema/userSchema");
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const generateReferralId = () => {
-  return crypto.randomBytes(12).toString('hex');
+  return crypto.randomBytes(12).toString("hex");
 };
 
-
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  service: "Gmail",
   auth: {
-    user: 'rajveershekhar.singh@gmail.com',
-    pass: 'qkbldjatxrfwdpwu',
+    user: "rajveershekhar.singh@gmail.com",
+    pass: "qkbldjatxrfwdpwu",
   },
 });
-
 
 exports.signup = async (req, res) => {
   try {
     const { name, email } = req.body;
 
     let user = await User.findOne({ email });
-    if (user) return res.status(200).json({ message: 'exist' });
+    if (user) return res.status(200).json({ message: "exist" });
     let password = req.body.password;
-    password = await bcrypt.hash(password, 12)
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    
+    password = await bcrypt.hash(password, 12);
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
     let referralId = generateReferralId();
     let referralIdExists = true;
 
     while (referralIdExists) {
-        const existingUser = await User.findOne({ referralId });
-        if (existingUser) {
-            referralId = generateReferralId(); 
-        } else {
-            referralIdExists = false;
-        }
+      const existingUser = await User.findOne({ referralId });
+      if (existingUser) {
+        referralId = generateReferralId();
+      } else {
+        referralIdExists = false;
+      }
     }
 
-    user = new User({ name, email, password,  verificationToken, referralId });
+    user = new User({ name, email, password, verificationToken, referralId });
 
     await user.save();
-    console.log("user saved")
+    console.log("user saved");
 
     const verificationLink = `${process.env.VERIFY_URL}${verificationToken}`;
     await transporter.sendMail({
       to: email,
-      subject: 'Verify your email',
+      subject: "Verify your email",
       html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
     });
 
-    res.status(200).json({ message: 'success' });
+    res.status(200).json({ message: "success" });
   } catch (err) {
     res.status(500).json({ message: `Server error: ${err}` });
-    console.log("Error: ", err)
+    console.log("Error: ", err);
   }
-}
+};
 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
-    if (!user) return res.status(200).json({ message: 'Invalid credentials' });
-    if (!user.isVerified) return res.status(200).json({ message: 'Email not verified' });
+    if (!user) return res.status(200).json({ message: "Invalid credentials" });
+    if (!user.isVerified)
+      return res.status(200).json({ message: "Email not verified" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(200).json({ message: 'Invalid credentials' });
+    if (!isMatch)
+      return res.status(200).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
-
-    res.status(200).json({ message: 'success', token: token });
+    res.status(200).json({ message: "success", token: token });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
-}
+};
 
 exports.isExist = async (req, res) => {
-
   try {
-
     const userId = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -99,11 +98,10 @@ exports.isExist = async (req, res) => {
       res.status(200).json({ message: false });
     }
   } catch (err) {
-    console.error('Error checking user existence:', err);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error checking user existence:", err);
+    res.status(500).json({ message: "Server error" });
   }
-
-}
+};
 
 exports.verifyEmail = async (req, res) => {
   try {
@@ -118,23 +116,27 @@ exports.verifyEmail = async (req, res) => {
 
     res.status(200).json({ message: true });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
-}
+};
 
 exports.getUserData = async (req, res) => {
-  console.log('started')
   try {
-    const userId = req.user.id; 
-    console.log('userid: ', userId)
-    const user = await User.findById(userId).select('-password -verificationToken'); 
+    const userId = req.user.id;
+    console.log("userid: ", userId);
+    //const user = await User.findById(userId).select('-password -verificationToken');
 
-    if (!user) return res.status(200).json({ message: 'User not found' });
+    const user = await User.findById(userId).select("-_id").populate({
+      path: "referrals",
+      select: "name email -_id",
+    });
 
-    console.log(user, "ghjkl")
+    if (!user) return res.status(200).json({ message: "User not found" });
+
+    console.log(user, "ghjkl");
 
     res.status(200).json({
-      message: 'success',
+      message: "success",
 
       // data: {
       //   id: user._id,
@@ -142,11 +144,144 @@ exports.getUserData = async (req, res) => {
       //   email: user.email,
       // }
 
-      data: user
+      data: user,
     });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
+};
 
+exports.getUserReferrals = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select(
+      "-password -verificationToken"
+    );
 
+    if (!user) return res.status(200).json({ message: "User not found" });
+
+    const referrals = user.referrals;
+
+    let referralData = [];
+
+    for (let referral of referrals) {
+      const user = await User.findById(referral).select(
+        "name, email, investmentAmount"
+      );
+      referralData.push(user);
+    }
+
+    res.status(200).json({ message: "success", data: referralData });
+  } catch (error) {
+    res.status(200).json({ message: "failure", error: error });
+  }
+};
+
+exports.fetchUser = async (req, res) => {
+  try {
+    const adminId = req.user.id;
+    console.log("fetchuser started", adminId)
+    const adminData = await User.findById(adminId);
+    if (!adminData || adminData.role !== "admin") {
+      return res.status(200).json({ message: "Invalid access" });
+    }
+    const userEmail = req.params.email;
+    const userData = await User.findOne({ email: userEmail }).select("-password -verificationToken").populate({
+      path: "referredBy",
+      select: "name email -_id",
+    });
+    if (userData) {
+      res.status(200).json({ message: "success", data: userData });
+    } else {
+      res.status(200).json({ message: "User not found." });
+    }
+  } catch (error) {
+    res.status(200).json({ message: "failure", error });
+  }
+};
+
+exports.getTotalInvestment = async (req, res) => {
+  try {
+   
+    const totalInvestment = await User.aggregate([
+      {
+        $group: {
+          _id: null, // Group all documents together
+          totalInvestment: { $sum: "$investmentAmount" } // Sum the investment field
+        }
+      }
+    ]);
+
+    // If no users found or no investments
+    if (!totalInvestment || totalInvestment.length === 0) {
+      return res.status(200).json({ totalInvestment: 0, message: "No investments found" });
+    }
+
+    // Send the total investment in the response
+    return res.status(200).json({
+      message: "success",
+      data: totalInvestment[0].totalInvestment,
+    });
+
+  } catch (error) {
+    console.error("Error fetching total investment:", error);
+    return res.status(200).json({ message: "Server error", error });
+  }
 }
+
+exports.getTotalUsers = async (req, res) => {
+  try {
+    
+    const totalUsers = await User.countDocuments();
+
+    return res.status(200).json({
+      message: "success",
+      totalUsers: totalUsers-1,
+    });
+
+  } catch (error) {
+    console.error("Error fetching total users:", error);
+    return res.status(200).json({ message: "Server error", error });
+  }
+}
+
+exports.getAnalytics = async (req, res) => {
+  try {
+    // Use Promise.all to run all queries simultaneously
+    const [totalEarningsAndInvestment, totalUsers] = await Promise.all([
+      // Aggregation to calculate total investment, referralEarning, and investmentEarning
+      User.aggregate([
+        {
+          $group: {
+            _id: null, // Group all documents together
+            totalInvestment: { $sum: "$investmentAmount" },  // Sum the investmentAmount field
+            totalReferralEarning: { $sum: "$referralEarning" }, // Sum the referralEarning field
+            totalInvestmentEarning: { $sum: "$investmentEarning" } // Sum the investmentEarning field
+          }
+        }
+      ]),
+      // Count total number of users
+      User.countDocuments()
+    ]);
+
+    // If no users or no data found
+    const totalInvestmentAmount = totalEarningsAndInvestment.length > 0 ? totalEarningsAndInvestment[0].totalInvestment : 0;
+    const totalReferralEarning = totalEarningsAndInvestment.length > 0 ? totalEarningsAndInvestment[0].totalReferralEarning : 0;
+    const totalInvestmentEarning = totalEarningsAndInvestment.length > 0 ? totalEarningsAndInvestment[0].totalInvestmentEarning : 0;
+
+    return res.status(200).json({
+      message: "success",
+      data: {
+        totalInvestment: totalInvestmentAmount,
+      totalReferralEarning: totalReferralEarning,
+      totalInvestmentEarning: totalInvestmentEarning,
+      totalUsers: totalUsers - 1
+      }
+      
+    });
+
+  } catch (error) {
+    console.error("Error fetching total investment, earnings, and users:", error);
+    return res.status(200).json({ message: "Server error", error });
+  }
+};

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../Components/Loader';
 import { useNavigate } from 'react-router-dom';
 import Main from '../Components/Main';
+import MainAdmin from '../Components/MainAdmin';
 import { IoPower } from "react-icons/io5";
 import { IoSettings } from "react-icons/io5";
 import { IoHome } from "react-icons/io5";
@@ -10,19 +11,39 @@ import { IoPersonAdd } from "react-icons/io5";
 import { MdWorkHistory } from "react-icons/md";
 import logo from '../assets/images/logo.svg';
 import Logout from '../Components/Logout';
-import { getUserData } from '../api/user';
-
+import UserEdit from '../Components/UserEdit';
+import { getUserData, getReferralData } from '../api/user';
 
 
 function Dashboard() {
-
     const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState({})
-
     const navigate = useNavigate();
-
-
     const [selected, setSelected] = useState(0);
+    const changeSelected=(id)=>{
+        setSelected(id);
+    }
+
+
+    
+    const icons = [
+        { id: 0, icon: <IoHome size={20} />, component: <Main userData={userData}/> },
+        { id: 1, icon: <IoNotifications size={20} />, component: '<div>zero</div>' },
+        { id: 2, icon: <IoPersonAdd size={20} />, component: <UserEdit/> },
+        { id: 3, icon: <MdWorkHistory size={20} />, component: '<div>zero</div>' },
+        { id: 4, icon: <IoSettings size={20} />, component: '<div>zero</div>' },
+        { id: 5, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
+    ];
+    
+    
+    
+    const iconsAdmin = [
+        { id: 0, icon: <IoHome size={20} />, component: <MainAdmin userData={userData}/> },
+
+        { id: 1, icon: <MdWorkHistory size={20} />, component: <UserEdit/> },
+
+        { id: 2, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
+    ];
 
     useEffect(()=>{
 
@@ -43,22 +64,7 @@ function Dashboard() {
 
     },[])
 
-    const changeSelected=(id)=>{
-        setSelected(id);
-    }
-
-
-
-
-    const icons = [
-        { id: 0, icon: <IoHome size={20} />, component: <Main userData={userData}/> },
-        { id: 1, icon: <IoNotifications size={20} />, component: '<div>zero</div>' },
-        { id: 2, icon: <IoPersonAdd size={20} />, component: '<div>zero</div>' },
-        { id: 3, icon: <MdWorkHistory size={20} />, component: '<div>zero</div>' },
-        { id: 4, icon: <IoSettings size={20} />, component: '<div>zero</div>' },
-        { id: 5, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
-    ];
-
+  
     return (
         <div className='w-full flex relative'>
             {loading && <Loader/>}
@@ -66,7 +72,9 @@ function Dashboard() {
 
                 <ul className='space-y-3'>
                     <li className='w-8 mb-10'><img src={logo} alt="" /></li>
-                    {icons.map((item) => (
+                    
+                    
+                    {(userData?.role === "admin"? (iconsAdmin) : (icons)).map((item) => (
                         <li key={item.id} onClick={()=>setSelected(item.id)} className={`text-black h-10 w-10 rounded-full flex justify-center items-center ${selected===item.id ? 'bg-primary' : 'bg-none'}`}>{item.icon}</li>
                     ))}
 
@@ -78,7 +86,7 @@ function Dashboard() {
 
 
             </div>
-            {icons[selected].component}
+            {(userData?.role === "admin"? (iconsAdmin) : (icons))[selected].component}
        
 
         </div>

@@ -1,11 +1,11 @@
 import apiClient from './index';
 
-export const getUserProfile = async () => {
+export const makeTransaction = async (transactionData) => {
   try {
-    const response = await apiClient.get('/fact');
+    const response = await apiClient.post('/transaction/admin-add', transactionData);
     return response.data;
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    console.error('Error adding transaction:', error);
     throw error;
   }
 };

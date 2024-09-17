@@ -13,7 +13,8 @@ const Badge = ({ type }) => {
   const iconColors = {
     silver: "text-gray-500",
     gold: "text-yellow-600",
-    platinum: "text-indigo-200"
+    platinum: "text-indigo-200",
+    admin: "text-blue-300"
   };
 
   const badgeClass = badgeTypes[type.toLowerCase()] || badgeTypes.silver;

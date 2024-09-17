@@ -64,7 +64,56 @@ export const verifyEmail = async (token) => {
 
 export const getUserData = async () => {
   try {
-    const response = await apiClient.get(`/user/getuserdata`);
+    const response = await apiClient.get(`/user/get-user-data`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+
+export const getReferralData = async () => {
+  try {
+    const response = await apiClient.get(`/user/get-referral-data`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching referral data:', error);
+    throw error;
+  }
+};
+
+export const fetchUser = async (email) => {
+  try {
+    const response = await apiClient.get(`/user/fetch-user-data/${email}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+
+export const getUserCount = async () => {
+  try {
+    const response = await apiClient.get('/user/get-total-users');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+
+export const getTotalInvestment = async () => {
+  try {
+    const response = await apiClient.get('/user/get-total-investment');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+export const getAnalytics = async () => {
+  try {
+    const response = await apiClient.get('/user/get-analytics');
     return response.data;
   } catch (error) {
     console.error('Error fetching user profile:', error);

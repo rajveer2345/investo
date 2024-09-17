@@ -38,12 +38,12 @@ const userSchema = new mongoose.Schema({
     },
     referredBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to another User document
+        ref: 'user', // Reference to another User document
         default: null,
     },
     referrals: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Array of references to User documents
+        ref: 'user', // Array of references to User documents
         default: [],
     }],
     userType: {

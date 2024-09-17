@@ -3,14 +3,18 @@ const transactionSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to the User model
+      ref: "user", // Reference to the User model
+      required: true,
+    },
+    from: {
+      type: String,
+      enum: ["admin", "system"],
       required: true,
     },
     reference: {
-      type: String,
-    },
-    orderId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user", 
+      required: true,
     },
     type: {
       type: String,
@@ -19,7 +23,7 @@ const transactionSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["investment", "", "EW"], // Restrict values to "Deposit" or "Withdrawal"
+      enum: ["investment", "investmentEarning", "referralEarning"], // Restrict values to "Deposit" or "Withdrawal"
       required: true,
     },
     amount: {
@@ -31,10 +35,9 @@ const transactionSchema = new mongoose.Schema(
       type: Date,
       default: Date.now, // Default to current date and time if not provided
     },
-    status: {
+    description: {
       type: String,
-      enum: ["pending", "completed", "failed"], // Restrict values to "Pending", "Completed", or "Failed"
-      required: true,
+      default: "",
     },
   },
   {
@@ -42,7 +45,7 @@ const transactionSchema = new mongoose.Schema(
   }
 );
 
-// Create and export the Transaction model
-const Transaction = mongoose.model("transaction", transactionSchema);
 
-module.exports = Transaction;
+const transaction = mongoose.model("transaction", transactionSchema);
+
+module.exports = transaction;
