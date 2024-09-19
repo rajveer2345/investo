@@ -1,4 +1,4 @@
-const transaction = require("../schema/transactionSchema");
+const Transaction = require("../schema/transactionSchema");
 const User = require("../schema/userSchema");
 
 exports.adminAddXX = async (req, res) => {
@@ -113,11 +113,11 @@ exports.adminAdd = async (req, res) => {
   session.startTransaction();
   
   try {
-    const adminId = req.user.id;
-    const userData = await User.findById(adminId);
-    if (!userData || userData.role !== "admin") {
-      return res.status(200).json({ message: "Invalid access" });
-    }
+  //const adminId = req.user.id;
+    // const userData = await User.findById(adminId);
+    // if (!userData || userData.role !== "admin") {
+    //   return res.status(200).json({ message: "Invalid access" });
+    // }
 
     const { userId, from, reference, type, category, amount, description } = req.body;
 
@@ -153,7 +153,7 @@ exports.adminAdd = async (req, res) => {
     }
 
     // Proceed with creating the transaction and updating the user's balance
-    const newTransaction = new transaction({
+    const newTransaction = new Transaction({
       userId,
       from,
       reference,
@@ -206,6 +206,88 @@ exports.adminAdd = async (req, res) => {
     session.endSession();
     console.error("Error creating transaction:", error);
     return res.status(500).json({ message: "Failed", error });
+  }
+};
+
+exports.getAdminTransactions = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      return res.status(200).json({
+        message: "Please provide both start and end dates.",
+      });
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    end.setHours(23, 59, 59, 999);
+
+    const transactions = await Transaction.find({
+      date: {
+        $gte: start,  
+        $lte: end,    
+      },
+    });
+
+    return res.status(200).json({
+      message: "success",
+      data: transactions,
+    });
+
+  } catch (error) {
+    console.error("Error fetching transactions by date range:", error);
+    return res.status(200).json({
+      message: "Server error",
+      error,
+    });
+  }
+};
+
+exports.getUserTransactions = async (req, res) => {
+  try {
+    const userId = req.user.id; 
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      return res.status(400).json({
+        message: "Please provide both start and end dates.",
+      });
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    end.setHours(23, 59, 59, 999);
+
+
+    const userTransactions = await Transaction.find({
+      userId, 
+      date: {
+        $gte: start, 
+        $lte: end,  
+      },
+    });
+
+    // If transactions are found, return them
+    if (userTransactions.length > 0) {
+      return res.status(200).json({
+        message: "success",
+        data: userTransactions,
+      });
+    } else {
+      return res.status(200).json({
+        message: "No transactions found within the provided date range.",
+      });
+    }
+
+  } catch (error) {
+    console.error("Error fetching user transactions:", error);
+    return res.status(200).json({
+      message: "Server error",
+      error,
+    });
   }
 };
 

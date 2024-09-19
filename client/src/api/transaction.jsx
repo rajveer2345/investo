@@ -9,3 +9,12 @@ export const makeTransaction = async (transactionData) => {
     throw error;
   }
 };
+export const getUserTransactions = async () => {
+  try {
+    const response = await apiClient.get('/transaction/get-admin-transactions');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching :', error);
+    throw error;
+  }
+};

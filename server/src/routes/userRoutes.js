@@ -22,10 +22,13 @@ router.get('/user/get-analytics',authenticateToken,adminValidation,userControlle
 
 
 
+
 //transaction routes
 
-router.post('/transaction/admin-add',  authenticateToken, transactionController.adminAdd) //admin route
-router.post('/transaction/system-add', transactionController.systemAdd)
+router.post('/transaction/admin-add',  authenticateToken, adminValidation, transactionController.adminAdd) //admin route
+
+router.get('/transaction/get-admin-transactions', authenticateToken, adminValidation, transactionController.getAdminTransactions) //admin route
+router.get('/transaction/get-user-transactions', authenticateToken, transactionController.getUserTransactions)
 
 
 module.exports = router;

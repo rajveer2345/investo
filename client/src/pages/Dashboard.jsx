@@ -12,7 +12,10 @@ import { MdWorkHistory } from "react-icons/md";
 import logo from '../assets/images/logo.svg';
 import Logout from '../Components/Logout';
 import UserEdit from '../Components/UserEdit';
+import TransactionHistory from '../Components/TransactionHistory';
 import { getUserData, getReferralData } from '../api/user';
+import { FaHistory } from "react-icons/fa";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 
 
 function Dashboard() {
@@ -40,9 +43,9 @@ function Dashboard() {
     const iconsAdmin = [
         { id: 0, icon: <IoHome size={20} />, component: <MainAdmin userData={userData}/> },
 
-        { id: 1, icon: <MdWorkHistory size={20} />, component: <UserEdit/> },
-
-        { id: 2, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
+        { id: 1, icon: <FaMoneyBillTransfer size={20} />, component: <UserEdit/> },
+        { id: 2, icon: <MdWorkHistory size={20} />, component: <TransactionHistory/> },
+        { id: 3, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
     ];
 
     useEffect(()=>{
