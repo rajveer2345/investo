@@ -90,7 +90,7 @@ function UserEdit() {
       <div className="w-full">
       <div className="m-3">
             <h1 className="text-lg font-semibold">Transactions</h1>
-            <p className="text-xs text-gray-600">Check user details and make transactions</p>
+            <p className="text-xs text-gray-400 font-normal">Check user details and make transactions</p>
           </div>
         <div className="bg-quarter mx-3 shadow-md rounded-lg p-4">
          

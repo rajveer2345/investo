@@ -11,6 +11,15 @@ export const makeTransaction = async (transactionData) => {
 };
 export const getUserTransactions = async () => {
   try {
+    const response = await apiClient.get('/transaction/get-user-transactions');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching :', error);
+    throw error;
+  }
+};
+export const getAdminTransactions = async () => {
+  try {
     const response = await apiClient.get('/transaction/get-admin-transactions');
     return response.data;
   } catch (error) {
