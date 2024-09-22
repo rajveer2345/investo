@@ -272,7 +272,9 @@ exports.getUserTransactions = async (req, res) => {
         $gte: start, 
         $lte: end,  
       },
-    });
+    })
+    .populate({ path: 'userId', select: 'email -_id' })    
+    .populate({ path: 'reference', select: 'email -_id' }) 
 
     // If transactions are found, return them
     if (userTransactions.length > 0) {

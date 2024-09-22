@@ -70,11 +70,17 @@ function Landing() {
 
 
                 </section>
-                <section id="section3" className="h-screen bg-tertiary flex items-center justify-center">
+                <section id="section3" className="h-screen bg-quarter">
+
+                    <About />
+
+
+                </section>
+                <section id="section4" className="h-screen bg-tertiary flex items-center justify-center">
 
                     <Contact />
                 </section>
-                <section id="section4" className=" bg-quarter w-full flex flex-col justify-end">
+                <section id="section5" className=" bg-quarter w-full flex flex-col justify-end">
 
 
                     <Testimonial />

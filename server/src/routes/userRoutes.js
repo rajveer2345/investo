@@ -15,13 +15,11 @@ router.get('/user/exists/:id',userController.isExist)
 router.get('/user/verifyemail/:token',userController.verifyEmail)
 router.get('/user/get-user-data', authenticateToken,userController.getUserData);
 router.get('/user/get-referral-data', authenticateToken,userController.getUserReferrals);
-router.get('/user/fetch-user-data/:email',authenticateToken,adminValidation,userController.fetchUser); //admin route
+router.get('/user/fetch-user-data-email/:email',authenticateToken,adminValidation,userController.fetchUserByEmail); //admin route
+router.get('/user/fetch-user-data-id/:id',authenticateToken,adminValidation,userController.fetchUserById); //admin route
 router.get('/user/get-total-investment',authenticateToken,adminValidation, userController.getTotalInvestment); //admin route
 router.get('/user/get-total-users',authenticateToken,adminValidation,userController.getTotalUsers); //admin route
 router.get('/user/get-analytics',authenticateToken,adminValidation,userController.getAnalytics); //admin route
-
-
-
 
 //transaction routes
 

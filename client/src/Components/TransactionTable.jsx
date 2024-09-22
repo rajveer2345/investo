@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TransactionViewModal from "./TransactionViewModal";
 
-
-const TransactionTable = ({ transactions }) => {
+const TransactionTable = ({ transactions, role }) => {
   const [modalTransaction, setModalTransaction] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -43,9 +42,11 @@ const TransactionTable = ({ transactions }) => {
             <tr>
               <th className="border px-2 py-2 text-sm font-semibold">S. No.</th>
               <th className="border px-2 py-2 text-sm font-semibold">From</th>
-              <th className="border px-2 py-2 text-sm font-semibold">
-                User ID
-              </th>
+              {role === "admin" && (
+                <th className="border px-2 py-2 text-sm font-semibold">
+                  User ID
+                </th>
+              )}
               <th className="border px-2 py-2 text-sm font-semibold">Type</th>
               <th className="border px-2 py-2 text-sm font-semibold">
                 Category
@@ -66,9 +67,11 @@ const TransactionTable = ({ transactions }) => {
                 <td className="border px-2 py-2 text-sm font-normal">
                   {transaction?.from}
                 </td>
-                <td className="border px-2 py-2 text-sm font-normal">
-                  {transaction?.userId?.email}
-                </td>
+                {role === "admin" && (
+                  <td className="border px-2 py-2 text-sm font-normal">
+                    {transaction?.userId?.email}
+                  </td>
+                )}
                 <td className="border px-2 py-2 text-sm font-normal">
                   {transaction?.type}
                 </td>

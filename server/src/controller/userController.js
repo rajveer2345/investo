@@ -18,33 +18,78 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// exports.signup = async (req, res) => {
+//   try {
+//     const { name, email } = req.body;
+//     const referredBy = req.body.referredBy || null;
+
+//     let user = await User.findOne({ email });
+//     if (user) return res.status(200).json({ message: "exist" });
+//     let password = req.body.password;
+//     password = await bcrypt.hash(password, 12);
+//     const verificationToken = crypto.randomBytes(32).toString("hex");
+
+//     user = new User({ name, email, password, verificationToken, referredBy });
+
+//     const newUser =  await user.save();
+
+//     await User.findByIdAndUpdate(
+//       referredBy,
+//       { $push: { referrals: newUser._id } }, 
+//       { new: true } 
+//     );
+
+//     const verificationLink = `${process.env.VERIFY_URL}${verificationToken}`;
+//     await transporter.sendMail({
+//       to: email,
+//       subject: "Verify your email",
+//       html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
+//     });
+
+//     res.status(200).json({ message: "success" });
+//   } catch (err) {
+//     res.status(500).json({ message: `Server error: ${err}` });
+//     console.log("Error: ", err);
+//   }
+// };
+
 exports.signup = async (req, res) => {
+  const session = await mongoose.startSession(); // Start a session for the transaction
+  session.startTransaction(); // Begin the transaction
+
   try {
-    const { name, email } = req.body;
+    const { name, email, referredBy } = req.body;
+    let password = req.body.password;
 
     let user = await User.findOne({ email });
-    if (user) return res.status(200).json({ message: "exist" });
-    let password = req.body.password;
+    if (user) {
+      await session.abortTransaction(); // Abort the transaction if user already exists
+      session.endSession();
+      return res.status(200).json({ message: "exist" });
+    }
+
+    // Hash the password and create the verification token
     password = await bcrypt.hash(password, 12);
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    // let referralId = generateReferralId();
-    // let referralIdExists = true;
+    // Create new user
+    user = new User({ name, email, password, verificationToken, referredBy });
+    const newUser = await user.save({ session }); // Save the user within the session
 
-    // while (referralIdExists) {
-    //   const existingUser = await User.findOne({ referralId });
-    //   if (existingUser) {
-    //     referralId = generateReferralId();
-    //   } else {
-    //     referralIdExists = false;
-    //   }
-    // }
+    // Update the referredBy user, pushing newUser._id into the referrals array
+    if (referredBy) {
+      await User.findByIdAndUpdate(
+        referredBy,
+        { $push: { referrals: newUser._id } },
+        { new: true, session } // Use the same session for this operation
+      );
+    }
 
-    user = new User({ name, email, password, verificationToken, referralId });
+    // Commit the transaction after both operations succeed
+    await session.commitTransaction();
+    session.endSession(); // End the session
 
-    await user.save();
-    console.log("user saved");
-
+    // Send verification email
     const verificationLink = `${process.env.VERIFY_URL}${verificationToken}`;
     await transporter.sendMail({
       to: email,
@@ -53,11 +98,17 @@ exports.signup = async (req, res) => {
     });
 
     res.status(200).json({ message: "success" });
+
   } catch (err) {
+    // If anything fails, abort the transaction and roll back changes
+    await session.abortTransaction();
+    session.endSession();
     res.status(500).json({ message: `Server error: ${err}` });
     console.log("Error: ", err);
   }
 };
+
+
 
 exports.login = async (req, res) => {
   try {
@@ -177,7 +228,7 @@ exports.getUserReferrals = async (req, res) => {
   }
 };
 
-exports.fetchUser = async (req, res) => {
+exports.fetchUserByEmail = async (req, res) => {
   try {
     const adminId = req.user.id;
     console.log("fetchuser started", adminId);
@@ -187,6 +238,30 @@ exports.fetchUser = async (req, res) => {
     }
     const userEmail = req.params.email;
     const userData = await User.findOne({ email: userEmail })
+      .select("-password -verificationToken")
+      .populate({
+        path: "referredBy",
+        select: "name email -_id",
+      });
+    if (userData) {
+      res.status(200).json({ message: "success", data: userData });
+    } else {
+      res.status(200).json({ message: "User not found." });
+    }
+  } catch (error) {
+    res.status(200).json({ message: "failure", error });
+  }
+};
+exports.fetchUserById = async (req, res) => {
+  try {
+    // const adminId = req.user.id;
+    // console.log("fetchuser started", adminId);
+    // const adminData = await User.findById(adminId);
+    // if (!adminData || adminData.role !== "admin") {
+    //   return res.status(200).json({ message: "Invalid access" });
+    // }
+    const userId = req.params.id;
+    const userData = await User.findById(userId)
       .select("-password -verificationToken")
       .populate({
         path: "referredBy",

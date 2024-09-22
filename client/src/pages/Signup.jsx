@@ -72,8 +72,8 @@ function Signup({ props }) {
         try {
             if (signupData.referredBy) {
                 let data = await checkReferralId(signupData.referredBy);
-                console.log('response: ', data);
-                if (!data.mesaage) {
+                
+                if (!data.message) {
                     toast.error('Referral ID does not exist.')
                     props.setLoading(false)
                     return;

@@ -15,7 +15,7 @@ function TransactionHistory({ role }) {
   const [ftransactions, setFtransactions] = useState([]);
 
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
+    startDate: new Date(new Date().setDate(new Date().getDate() - 1)),
     endDate: new Date(),
   });
 
@@ -48,9 +48,7 @@ function TransactionHistory({ role }) {
     return new Date(date).toISOString().split("T")[0];
   };
 
-  function setFilter(type) {
-    setSelectedFilter(type);
-  }
+
 
   useEffect(() => {
     switch (selectedFilter) {
@@ -140,7 +138,7 @@ function TransactionHistory({ role }) {
             <div>
               <label>From: </label>
               <input
-                max={formatDate(new Date())}
+                max={formatDate(new Date(new Date().setDate(new Date().getDate() - 1)))}
                 className="w-28 p-1 rounded-md border border-gray-200"
                 type="date"
                 value={
@@ -175,7 +173,7 @@ function TransactionHistory({ role }) {
           </form>
         </div>
         <div>
-          <TransactionTable transactions={ftransactions} />
+          <TransactionTable transactions={ftransactions} role={role} />
         </div>
       </div>
     </>

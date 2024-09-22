@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchUser } from "../api/user";
+import { fetchUserByEmail, fetchUserById } from "../api/user";
 import { makeTransaction } from "../api/transaction";
 import Loader from "../Components/Loader";
 import toast from "react-hot-toast";
@@ -7,6 +7,7 @@ import TransactionModal from "./TransactionModal";
 
 function UserEdit() {
   const [fetchedUserData, setFetchedUserData] = useState({});
+  const [queryMode, setQueryMode] = useState("email");
   const [formView, setFormView] = useState("fetch");
   const [queryEmail, setQueryEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ function UserEdit() {
     setLoading(true);
 
     try {
-      const userData = await fetchUser(queryEmail);
+      const userData = queryMode === "email" ? await fetchUserByEmail(queryEmail) : await fetchUserById(queryEmail);
 
       if (userData.message === "success") {
         setFetchedUserData(userData?.data);
@@ -75,6 +76,11 @@ function UserEdit() {
     setTransactionData(tData);
   }, [fetchedUserData]);
 
+  useEffect(()=>{
+  console.log(queryMode) 
+
+  },[queryMode])
+
   return (
     <>
       {modelView && (
@@ -88,12 +94,13 @@ function UserEdit() {
       {loading ? <Loader /> : null}
 
       <div className="w-full">
-      <div className="m-3">
-            <h1 className="text-lg font-semibold">Transactions</h1>
-            <p className="text-xs text-gray-400 font-normal">Check user details and make transactions</p>
-          </div>
+        <div className="m-3">
+          <h1 className="text-lg font-semibold">Transactions</h1>
+          <p className="text-xs text-gray-400 font-normal">
+            Check user details and make transactions
+          </p>
+        </div>
         <div className="bg-quarter mx-3 shadow-md rounded-lg p-4">
-         
           <div className="w-full sm:w-1/2 items-start flex gap-2">
             <input
               onChange={handleQueryChange}
@@ -103,6 +110,17 @@ function UserEdit() {
               value={queryEmail}
               placeholder="Enter User E-mail"
             />
+            <select
+              onChange={(e) => {
+                setQueryMode(e.target.value);
+              }}
+              value={queryMode}
+              className="text-xs font-normal rounded-full h-8 px-2 border-solid border-2"
+              placeholder="Enter User E-mail"
+            >
+              <option value="email">Email</option>
+              <option value="id">ID</option>
+            </select>
             <button
               onClick={fetchUserData}
               className="h-8 w-20 bg-black text-white text-xs font-medium rounded-full"
@@ -149,6 +167,15 @@ function UserEdit() {
             <div id="form-deposit" className="w-full mt-5 rounded-3xl">
               <div className="w-full border border-gray-300 my-2"></div>
 
+              <label className="text-xs font-semibold">ID</label>
+              <input
+                className="w-full rounded-full mt-1 h-8 mb-1 px-2 border-solid border-2"
+                type="text"
+                disabled={true}
+                value={fetchedUserData?._id}
+                name="id"
+                placeholder="ID"
+              />
               <label className="text-xs font-semibold">Name</label>
               <input
                 className="w-full rounded-full mt-1 h-8 mb-1 px-2 border-solid border-2"

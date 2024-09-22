@@ -82,9 +82,18 @@ export const getReferralData = async () => {
   }
 };
 
-export const fetchUser = async (email) => {
+export const fetchUserByEmail = async (email) => {
   try {
-    const response = await apiClient.get(`/user/fetch-user-data/${email}`);
+    const response = await apiClient.get(`/user/fetch-user-data-email/${email}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+export const fetchUserById = async (id) => {
+  try {
+    const response = await apiClient.get(`/user/fetch-user-data-id/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching user profile:', error);

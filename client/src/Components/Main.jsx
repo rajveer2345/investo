@@ -82,11 +82,11 @@ function Main({ userData }) {
           <div className="px-8 bg-tertiary rounded-3xl flex flex-col items-center justify-center h-48 w-60">
             <h5 className="text-xs font-semibold">Total Investment</h5>
             <h1 className="text-4xl font-semibold mt-5">
-              &#x20b9;{userData?.investmentAmount || 0}
+              ${userData?.investmentAmount || 0}
             </h1>
 
             <h6 className="font-normal text-xs mt-2">
-              + <span className="text-xs font-semibold">&#x20b9;2508</span> last
+              + <span className="text-xs font-semibold">$2508</span> last
               week
             </h6>
             <div className="flex mt-3">
@@ -101,12 +101,12 @@ function Main({ userData }) {
           <div className="px-8 bg-tertiary rounded-3xl flex flex-col items-center justify-center h-48 w-60">
             <h5 className="text-xs font-semibold">Total Earnings</h5>
             <h1 className="text-4xl font-semibold mt-5">
-              &#x20b9;
+              $
               {userData?.investmentEarning + userData?.referralEarning || 0}
             </h1>
 
             <h6 className="font-normal text-xs mt-2">
-              + <span className="text-xs font-semibold">&#x20b9;2508</span> last
+              + <span className="text-xs font-semibold">$2508</span> last
               week
             </h6>
             <div className="flex mt-3">
@@ -128,10 +128,10 @@ function Main({ userData }) {
               <div className=" flex flex-col justify-center items-start w-full ps-4">
                 <h5 className="text-xs font-semibold">From Refferals</h5>
                 <h2 className="text-3xl">
-                  &#x20b9;{userData?.referralEarning || 0}
+                  ${userData?.referralEarning || 0}
                 </h2>
                 <h6 className="font-normal text-xs invisible">
-                  + <span className="text-xs font-semibold">&#x20b9;2508</span>{" "}
+                  + <span className="text-xs font-semibold">$2508</span>{" "}
                   last week
                 </h6>
               </div>
@@ -145,10 +145,10 @@ function Main({ userData }) {
               <div className=" flex flex-col justify-center items-start w-full ps-4">
                 <h5 className="text-xs font-semibold">From Investments</h5>
                 <h2 className="text-3xl">
-                  &#x20b9;{userData?.investmentEarning || 0}
+                  ${userData?.investmentEarning || 0}
                 </h2>
                 <h6 className="font-normal text-xs invisible">
-                  + <span className="text-xs font-semibold">&#x20b9;2508</span>{" "}
+                  + <span className="text-xs font-semibold">$2508</span>{" "}
                   last week
                 </h6>
               </div>
@@ -213,7 +213,7 @@ function Main({ userData }) {
                 <h5 className="text-xs font-medium">3.5%</h5>
               </div>
               <div className="w-full text-center ms-3">
-                <h5 className="text-xs font-medium">&#x20b9;2350</h5>
+                <h5 className="text-xs font-medium">$2350</h5>
               </div>
             </div>
             <div className="w-full bg-secondary rounded-3xl flex justify-between p-2 gap-3 items-center">
@@ -227,7 +227,7 @@ function Main({ userData }) {
                 <h5 className="text-xs font-medium">3.5%</h5>
               </div>
               <div className="w-full text-center ms-3">
-                <h5 className="text-xs font-medium">&#x20b9;2350</h5>
+                <h5 className="text-xs font-medium">$2350</h5>
               </div>
             </div>
             <div className="w-full bg-secondary rounded-3xl flex justify-between p-2 gap-3 items-center">
@@ -241,7 +241,7 @@ function Main({ userData }) {
                 <h5 className="text-xs font-medium">3.5%</h5>
               </div>
               <div className="w-full text-center ms-3">
-                <h5 className="text-xs font-medium">&#x20b9;2350</h5>
+                <h5 className="text-xs font-medium">$2350</h5>
               </div>
             </div>
             <div className="w-full bg-secondary rounded-3xl flex justify-between p-2 gap-3 items-center">
@@ -255,7 +255,7 @@ function Main({ userData }) {
                 <h5 className="text-xs font-medium">3.5%</h5>
               </div>
               <div className="w-full text-center ms-3">
-                <h5 className="text-xs font-medium">&#x20b9;2350</h5>
+                <h5 className="text-xs font-medium">$2350</h5>
               </div>
             </div> */}
           </div>
