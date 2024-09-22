@@ -11,7 +11,7 @@ const routes = [
     { path: '/dashboard', element: <Dashboard /> },
     { path: '/investo-admin', element: <AdminLogin/> },
     { path: '/verifyemail/:token', element: <EmailVerify/> },
-    { path: '/verifyemail/:token', element: <EmailVerify/> },
+    //{ path: '/verifyemail/:token', element: <EmailVerify/> },
     { path: '/test', element: <Test/> },
   ];
 
