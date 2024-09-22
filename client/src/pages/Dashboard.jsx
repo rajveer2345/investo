@@ -31,11 +31,11 @@ function Dashboard() {
     
     const icons = [
         { id: 0, icon: <IoHome size={20} />, component: <Main userData={userData}/> },
-        { id: 1, icon: <IoNotifications size={20} />, component: '<div>zero</div>' },
-        { id: 2, icon: <IoPersonAdd size={20} />, component: <UserEdit/> },
-        { id: 3, icon: <MdWorkHistory size={20} />, component: '<div>zero</div>' },
-        { id: 4, icon: <IoSettings size={20} />, component: '<div>zero</div>' },
-        { id: 5, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
+        //{ id: 1, icon: <IoNotifications size={20} />, component: '<div>zero</div>' },
+        //{ id: 2, icon: <IoPersonAdd size={20} />, component: <UserEdit/> },
+        { id: 1, icon: <MdWorkHistory size={20} />, component: <TransactionHistory role={userData.role}/> },
+        //{ id: 2, icon: <IoSettings size={20} />, component: '<div>zero</div>' },
+        { id: 2, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
     ];
     
     
@@ -44,7 +44,7 @@ function Dashboard() {
         { id: 0, icon: <IoHome size={20} />, component: <MainAdmin userData={userData}/> },
 
         { id: 1, icon: <FaMoneyBillTransfer size={20} />, component: <UserEdit/> },
-        { id: 2, icon: <MdWorkHistory size={20} />, component: <TransactionHistory/> },
+        { id: 2, icon: <MdWorkHistory size={20} />, component: <TransactionHistory role={userData.role}/> },
         { id: 3, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
     ];
 

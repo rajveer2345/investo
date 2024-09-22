@@ -9,18 +9,22 @@ export const makeTransaction = async (transactionData) => {
     throw error;
   }
 };
-export const getUserTransactions = async () => {
+export const getUserTransactions = async (param) => {
   try {
-    const response = await apiClient.get('/transaction/get-user-transactions');
+    const response = await apiClient.get('/transaction/get-user-transactions', {
+      params: param,
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching :', error);
     throw error;
   }
 };
-export const getAdminTransactions = async () => {
+export const getAdminTransactions = async (param) => {
   try {
-    const response = await apiClient.get('/transaction/get-admin-transactions');
+    const response = await apiClient.get('/transaction/get-admin-transactions', {
+      params: param,
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching :', error);

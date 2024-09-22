@@ -15,6 +15,7 @@ exports.adminAddXX = async (req, res) => {
     if (!userId || !reference || !type || !category || !amount) {
       return res.status(200).json({ message: "Missing required fields." });
     }
+    
 
     //userId = user account in which money added or removed
     //from = who initiated transaction system or admin
@@ -31,7 +32,7 @@ exports.adminAddXX = async (req, res) => {
       return res.status(200).json({ message: "User or reference not found." });
     }
 
-    const newTransaction = new transaction({
+    const newTransaction = new Transaction({
       userId,
       from,
       reference,
@@ -229,7 +230,10 @@ exports.getAdminTransactions = async (req, res) => {
         $gte: start,  
         $lte: end,    
       },
-    });
+    })
+    .populate({ path: 'userId', select: 'email -_id' })    
+    .populate({ path: 'reference', select: 'email -_id' }) 
+    
 
     return res.status(200).json({
       message: "success",

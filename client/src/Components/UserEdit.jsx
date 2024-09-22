@@ -94,7 +94,7 @@ function UserEdit() {
           </div>
         <div className="bg-quarter mx-3 shadow-md rounded-lg p-4">
          
-          <div class="w-full sm:w-1/2 items-start flex gap-2">
+          <div className="w-full sm:w-1/2 items-start flex gap-2">
             <input
               onChange={handleQueryChange}
               className="w-full rounded-full h-8 px-2 border-solid border-2"

@@ -28,17 +28,17 @@ exports.signup = async (req, res) => {
     password = await bcrypt.hash(password, 12);
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    let referralId = generateReferralId();
-    let referralIdExists = true;
+    // let referralId = generateReferralId();
+    // let referralIdExists = true;
 
-    while (referralIdExists) {
-      const existingUser = await User.findOne({ referralId });
-      if (existingUser) {
-        referralId = generateReferralId();
-      } else {
-        referralIdExists = false;
-      }
-    }
+    // while (referralIdExists) {
+    //   const existingUser = await User.findOne({ referralId });
+    //   if (existingUser) {
+    //     referralId = generateReferralId();
+    //   } else {
+    //     referralIdExists = false;
+    //   }
+    // }
 
     user = new User({ name, email, password, verificationToken, referralId });
 
@@ -126,9 +126,9 @@ exports.getUserData = async (req, res) => {
     console.log("userid: ", userId);
     //const user = await User.findById(userId).select('-password -verificationToken');
 
-    const user = await User.findById(userId).select("-_id").populate({
+    const user = await User.findById(userId).select("-password -verificationToken -isVerified").populate({
       path: "referrals",
-      select: "name email -_id",
+      select: "name email investmentAmount -_id",
     });
 
     if (!user) return res.status(200).json({ message: "User not found" });
@@ -180,16 +180,18 @@ exports.getUserReferrals = async (req, res) => {
 exports.fetchUser = async (req, res) => {
   try {
     const adminId = req.user.id;
-    console.log("fetchuser started", adminId)
+    console.log("fetchuser started", adminId);
     const adminData = await User.findById(adminId);
     if (!adminData || adminData.role !== "admin") {
       return res.status(200).json({ message: "Invalid access" });
     }
     const userEmail = req.params.email;
-    const userData = await User.findOne({ email: userEmail }).select("-password -verificationToken").populate({
-      path: "referredBy",
-      select: "name email -_id",
-    });
+    const userData = await User.findOne({ email: userEmail })
+      .select("-password -verificationToken")
+      .populate({
+        path: "referredBy",
+        select: "name email -_id",
+      });
     if (userData) {
       res.status(200).json({ message: "success", data: userData });
     } else {
@@ -202,19 +204,20 @@ exports.fetchUser = async (req, res) => {
 
 exports.getTotalInvestment = async (req, res) => {
   try {
-   
     const totalInvestment = await User.aggregate([
       {
         $group: {
           _id: null, // Group all documents together
-          totalInvestment: { $sum: "$investmentAmount" } // Sum the investment field
-        }
-      }
+          totalInvestment: { $sum: "$investmentAmount" }, // Sum the investment field
+        },
+      },
     ]);
 
     // If no users found or no investments
     if (!totalInvestment || totalInvestment.length === 0) {
-      return res.status(200).json({ totalInvestment: 0, message: "No investments found" });
+      return res
+        .status(200)
+        .json({ totalInvestment: 0, message: "No investments found" });
     }
 
     // Send the total investment in the response
@@ -222,28 +225,25 @@ exports.getTotalInvestment = async (req, res) => {
       message: "success",
       data: totalInvestment[0].totalInvestment,
     });
-
   } catch (error) {
     console.error("Error fetching total investment:", error);
     return res.status(200).json({ message: "Server error", error });
   }
-}
+};
 
 exports.getTotalUsers = async (req, res) => {
   try {
-    
     const totalUsers = await User.countDocuments();
 
     return res.status(200).json({
       message: "success",
-      totalUsers: totalUsers-1,
+      totalUsers: totalUsers - 1,
     });
-
   } catch (error) {
     console.error("Error fetching total users:", error);
     return res.status(200).json({ message: "Server error", error });
   }
-}
+};
 
 exports.getAnalytics = async (req, res) => {
   try {
@@ -254,34 +254,44 @@ exports.getAnalytics = async (req, res) => {
         {
           $group: {
             _id: null, // Group all documents together
-            totalInvestment: { $sum: "$investmentAmount" },  // Sum the investmentAmount field
+            totalInvestment: { $sum: "$investmentAmount" }, // Sum the investmentAmount field
             totalReferralEarning: { $sum: "$referralEarning" }, // Sum the referralEarning field
-            totalInvestmentEarning: { $sum: "$investmentEarning" } // Sum the investmentEarning field
-          }
-        }
+            totalInvestmentEarning: { $sum: "$investmentEarning" }, // Sum the investmentEarning field
+          },
+        },
       ]),
       // Count total number of users
-      User.countDocuments()
+      User.countDocuments(),
     ]);
 
     // If no users or no data found
-    const totalInvestmentAmount = totalEarningsAndInvestment.length > 0 ? totalEarningsAndInvestment[0].totalInvestment : 0;
-    const totalReferralEarning = totalEarningsAndInvestment.length > 0 ? totalEarningsAndInvestment[0].totalReferralEarning : 0;
-    const totalInvestmentEarning = totalEarningsAndInvestment.length > 0 ? totalEarningsAndInvestment[0].totalInvestmentEarning : 0;
+    const totalInvestmentAmount =
+      totalEarningsAndInvestment.length > 0
+        ? totalEarningsAndInvestment[0].totalInvestment
+        : 0;
+    const totalReferralEarning =
+      totalEarningsAndInvestment.length > 0
+        ? totalEarningsAndInvestment[0].totalReferralEarning
+        : 0;
+    const totalInvestmentEarning =
+      totalEarningsAndInvestment.length > 0
+        ? totalEarningsAndInvestment[0].totalInvestmentEarning
+        : 0;
 
     return res.status(200).json({
       message: "success",
       data: {
         totalInvestment: totalInvestmentAmount,
-      totalReferralEarning: totalReferralEarning,
-      totalInvestmentEarning: totalInvestmentEarning,
-      totalUsers: totalUsers - 1
-      }
-      
+        totalReferralEarning: totalReferralEarning,
+        totalInvestmentEarning: totalInvestmentEarning,
+        totalUsers: totalUsers - 1,
+      },
     });
-
   } catch (error) {
-    console.error("Error fetching total investment, earnings, and users:", error);
+    console.error(
+      "Error fetching total investment, earnings, and users:",
+      error
+    );
     return res.status(200).json({ message: "Server error", error });
   }
 };

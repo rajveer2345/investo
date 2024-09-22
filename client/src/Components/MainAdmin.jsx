@@ -15,8 +15,10 @@ import { IoMdCopy } from "react-icons/io";
 import { BiSolidBadgeDollar } from "react-icons/bi";
 import { getUserCount, getAnalytics } from "../api/user";
 import Loader from "./Loader";
+import { useNavigate } from "react-router-dom";
 
 function MainAdmin({ userData }) {
+  const navigate = useNavigate();
   const [userCount, setUserCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [totalInvestment, setTotalInvestment] = useState(0);
@@ -28,17 +30,20 @@ function MainAdmin({ userData }) {
   });
 
   async function fetchAnalytics() {
-    setLoading(true)
+    setLoading(true);
     try {
       const data = await getAnalytics();
+      console.log(data);
       if (data.message === "success") {
         setAnalyticsData(data?.data);
-      } else {
+      } else if (data.message === "Invalid token") {
+        localStorage.clear();
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -53,6 +58,16 @@ function MainAdmin({ userData }) {
       console.error("Failed to copy: ", err);
     }
   };
+
+  const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 12)]; // Only use 0-11 to get darker colors
+    }
+    return color;
+  };
+
   return (
     <>
       {loading ? <Loader /> : null}
@@ -175,10 +190,10 @@ function MainAdmin({ userData }) {
                   <h5 className="text-xs font-medium">Name</h5>
                 </div>
                 <div className="w-full text-gray-500 text-center ms-3">
-                  <h5 className="text-xs font-medium">Share</h5>
+                  <h5 className="text-xs font-medium">Email</h5>
                 </div>
                 <div className="w-full text-gray-500 text-center ms-3">
-                  <h5 className="text-xs font-medium">Total</h5>
+                  <h5 className="text-xs font-medium">Investment</h5>
                 </div>
               </div>
               {Array.isArray(userData?.referrals) &&
@@ -188,12 +203,18 @@ function MainAdmin({ userData }) {
                       key={index}
                       className="w-full bg-secondary rounded-3xl flex justify-between p-2 gap-3 items-center"
                     >
-                      <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                        <img
-                          className="rounded-full w-8 h-8"
-                          src={user1}
-                          alt=""
-                        />
+                      <div
+                        style={{ backgroundColor: getRandomColor() }}
+                        className="w-8 h-8 rounded-full min-w-8 flex justify-center items-center text-sm font-semibold text-white border border-white"
+                      >
+                        {referral?.name
+                          .split(" ")
+                          .map((n, i, arr) =>
+                            i === 0 || i === arr.length - 1
+                              ? n[0].toUpperCase()
+                              : ""
+                          )
+                          .join("")}
                       </div>
                       <div className="w-full text-center ms-3">
                         <h5 className="text-xs font-medium">
@@ -206,7 +227,9 @@ function MainAdmin({ userData }) {
                         </h5>
                       </div>
                       <div className="w-full text-center ms-3">
-                        <h5 className="text-xs font-medium">&#x20b9;2350</h5>
+                        <h5 className="text-xs font-medium">
+                          {referral?.investmentAmount}
+                        </h5>
                       </div>
                     </div>
                   );
@@ -276,7 +299,7 @@ function MainAdmin({ userData }) {
           className="bg-quarter sm:w-[30%] w-[100%] flex flex-col shadow-md"
         >
           <div id="sidebar-top-div" className=" w-[100%] px-5 py-5">
-            <div className="flex justify-between w-full pb-5">
+            {/* <div className="flex justify-between w-full pb-5">
               <div className="text-gray-500 text-[10px] font-medium flex">
                 <IoSearchOutline size={15} color="black" />{" "}
                 <span className="ms-1">Search</span>
@@ -320,9 +343,9 @@ function MainAdmin({ userData }) {
                   Pay Now
                 </button>
               </form>
-            </div>
+            </div> */}
             <div id="events" className="flex flex-col gap-3">
-              <div className="text-xs mt-5 font-semibold">Latest News</div>
+              <div className="text-xs  font-semibold">Latest News</div>
 
               <div className="w-full bg-tertiary rounded-3xl flex p-3">
                 <div className="w-8 h-8 rounded-full bg-white min-w-8">

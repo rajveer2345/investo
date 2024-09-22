@@ -32,10 +32,6 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    referralId: {
-          type: String,
-          required: true
-    },
     referredBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user', // Reference to another User document
