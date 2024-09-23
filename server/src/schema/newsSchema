@@ -1,0 +1,23 @@
+const mongoose = require('mongoose');
+
+const newsSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  content: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  status: {
+    type: String,
+    enum: ['new', 'old'],
+    default: 'new' 
+  }
+});
+
+const News = mongoose.model('News', newsSchema);
+
+module.exports = News;

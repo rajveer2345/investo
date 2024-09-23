@@ -1,6 +1,7 @@
 const express=require('express');
 const router=express.Router();
 const userController=require("../controller/userController");
+const newsController=require("../controller/newsController");
 const transactionController=require("../controller/transactionController");
 const adminValidation=require("../auth/adminValidate")
 const authenticateToken = require("../auth/auth")
@@ -27,6 +28,16 @@ router.post('/transaction/admin-add',  authenticateToken, adminValidation, trans
 
 router.get('/transaction/get-admin-transactions', authenticateToken, adminValidation, transactionController.getAdminTransactions) //admin route
 router.get('/transaction/get-user-transactions', authenticateToken, transactionController.getUserTransactions)
+
+
+//news routes
+
+router.post('/news/create-news', newsController.createNews);
+router.get('/news/get-all-news', newsController.getAllNews);
+router.delete('/news/delete-news/:id', newsController.deleteNews);
+router.put('/news/update-news/:id', newsController.updateNews);
+
+
 
 
 module.exports = router;

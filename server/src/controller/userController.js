@@ -58,8 +58,10 @@ exports.signup = async (req, res) => {
   session.startTransaction(); // Begin the transaction
 
   try {
-    const { name, email, referredBy } = req.body;
+    const { name, email } = req.body;
     let password = req.body.password;
+
+    const referredBy = req.body.referredBy || null;
 
     let user = await User.findOne({ email });
     if (user) {
