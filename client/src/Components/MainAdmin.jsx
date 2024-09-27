@@ -104,7 +104,7 @@ function MainAdmin({ userData }) {
             <div className="px-8 bg-tertiary rounded-3xl flex flex-col items-center justify-center h-48 w-60">
               <h5 className="text-xs font-semibold">Total Investment</h5>
               <h1 className="text-4xl font-semibold mt-5">
-                ${analyticsData.totalInvestment}
+                ${analyticsData.totalInvestment/100}
               </h1>
 
               <h6 className="font-normal text-xs mt-2">
@@ -167,7 +167,7 @@ function MainAdmin({ userData }) {
                 <div className=" flex flex-col justify-center items-start w-full ps-4">
                   <h5 className="text-xs font-semibold">From Investments</h5>
                   <h2 className="text-3xl">
-                    ${analyticsData.totalInvestmentEarning}
+                    ${analyticsData.totalInvestmentEarning/100}
                   </h2>
                   <h6 className="font-normal text-xs invisible">
                     +{" "}
@@ -228,7 +228,7 @@ function MainAdmin({ userData }) {
                       </div>
                       <div className="w-full text-center ms-3">
                         <h5 className="text-xs font-medium">
-                          {referral?.investmentAmount}
+                          {referral?.investmentAmount/100}
                         </h5>
                       </div>
                     </div>

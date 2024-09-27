@@ -212,7 +212,7 @@ function UserEdit() {
                 <div className="flex gap-2">
                   <input
                     disabled={true}
-                    value={fetchedUserData?.investmentAmount}
+                    value={fetchedUserData?.investmentAmount/100}
                     className="w-full rounded-full mt-1 h-8 mb-1 px-2 border-solid border-2 "
                     type="text"
                     name="nvestmentAmount"
@@ -254,7 +254,7 @@ function UserEdit() {
                 <div className="flex gap-2">
                   <input
                     disabled={true}
-                    value={fetchedUserData?.investmentEarning}
+                    value={fetchedUserData?.investmentEarning/100}
                     className="w-full rounded-full mt-1 h-8 mb-1 px-2 border-solid border-2 "
                     type="text"
                     name="amount"
@@ -283,7 +283,7 @@ function UserEdit() {
                 <div className="flex gap-2">
                   <input
                     disabled={true}
-                    value={fetchedUserData?.referralEarning}
+                    value={fetchedUserData?.referralEarning/100}
                     className="w-full rounded-full mt-1 h-8 mb-1 px-2 border-solid border-2 "
                     type="text"
                     name="amount"

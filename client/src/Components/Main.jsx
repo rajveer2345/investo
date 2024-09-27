@@ -82,7 +82,7 @@ function Main({ userData }) {
           <div className="px-8 bg-tertiary rounded-3xl flex flex-col items-center justify-center h-48 w-60">
             <h5 className="text-xs font-semibold">Total Investment</h5>
             <h1 className="text-4xl font-semibold mt-5">
-              ${userData?.investmentAmount || 0}
+              ${userData?.investmentAmount/100 || 0}
             </h1>
 
             <h6 className="font-normal text-xs mt-2">
@@ -102,7 +102,7 @@ function Main({ userData }) {
             <h5 className="text-xs font-semibold">Total Earnings</h5>
             <h1 className="text-4xl font-semibold mt-5">
               $
-              {userData?.investmentEarning + userData?.referralEarning || 0}
+              {userData?.investmentEarning/100 + userData?.referralEarning/100 || 0}
             </h1>
 
             <h6 className="font-normal text-xs mt-2">
@@ -128,7 +128,7 @@ function Main({ userData }) {
               <div className=" flex flex-col justify-center items-start w-full ps-4">
                 <h5 className="text-xs font-semibold">From Refferals</h5>
                 <h2 className="text-3xl">
-                  ${userData?.referralEarning || 0}
+                  ${userData?.referralEarning/100 || 0}
                 </h2>
                 <h6 className="font-normal text-xs invisible">
                   + <span className="text-xs font-semibold">$2508</span>{" "}
@@ -145,7 +145,7 @@ function Main({ userData }) {
               <div className=" flex flex-col justify-center items-start w-full ps-4">
                 <h5 className="text-xs font-semibold">From Investments</h5>
                 <h2 className="text-3xl">
-                  ${userData?.investmentEarning || 0}
+                  ${userData?.investmentEarning/100 || 0}
                 </h2>
                 <h6 className="font-normal text-xs invisible">
                   + <span className="text-xs font-semibold">$2508</span>{" "}
@@ -196,7 +196,7 @@ function Main({ userData }) {
                     <h5 className="text-xs font-medium">{referral?.email}</h5>
                   </div>
                   <div className="w-full text-center ms-3">
-                    <h5 className="text-xs font-medium">{referral?.investmentAmount}</h5>
+                    <h5 className="text-xs font-medium">{referral?.investmentAmount/100}</h5>
                   </div>
                 </div>
               );

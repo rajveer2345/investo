@@ -5,7 +5,7 @@ const newsController=require("../controller/newsController");
 const transactionController=require("../controller/transactionController");
 const adminValidation=require("../auth/adminValidate")
 const authenticateToken = require("../auth/auth")
-
+const APIKeyValidation = require("../auth/APIKeyValidation")
 
 
 //user Routes
@@ -36,6 +36,18 @@ router.post('/news/create-news', newsController.createNews);
 router.get('/news/get-all-news', newsController.getAllNews);
 router.delete('/news/delete-news/:id', newsController.deleteNews);
 router.put('/news/update-news/:id', newsController.updateNews);
+
+
+//test route
+router.post('/transaction/referral-earning/system-add',APIKeyValidation, transactionController.addReferralEarning);
+router.post('/transaction/investment-earning/system-add',APIKeyValidation, transactionController.addInvestmentEarning);
+
+
+
+//math route
+router.get('/maths/:rate/:amount',transactionController.maths)
+
+
 
 
 

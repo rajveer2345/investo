@@ -62,7 +62,7 @@ function TransactionModal({ transaction, setOpen }) {
               className="w-full rounded-full h-8 px-2 border-solid border-2"
               type="number"
               name="amount"
-              value={transaction?.amount}
+              value={transaction?.amount/100}
               readOnly
             />
           </div>

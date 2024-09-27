@@ -60,7 +60,7 @@ const TransactionTable = ({ transactions, role }) => {
           </thead>
           <tbody>
             {transactions.map((transaction, index) => (
-              <tr key={transaction._id}>
+              <tr className="odd:bg-white even:bg-quarter" key={transaction._id}>
                 <td className="border px-2 py-2 text-sm font-normal w-14">
                   {index + 1}
                 </td>
@@ -79,7 +79,7 @@ const TransactionTable = ({ transactions, role }) => {
                   {transaction?.category}
                 </td>
                 <td className="border px-2 py-2 text-sm font-normal">
-                  {transaction?.amount}
+                  {transaction?.amount/100}
                 </td>
                 <td className="border px-2 py-2 text-sm font-normal">
                   {new Date(transaction?.date).toLocaleString()}
