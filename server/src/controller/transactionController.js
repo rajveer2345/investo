@@ -2,8 +2,6 @@ const Transaction = require("../schema/transactionSchema");
 const User = require("../schema/userSchema");
 const mongoose = require("mongoose");
 
-
-
 exports.adminAdd = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -281,7 +279,7 @@ exports.addReferralEarning = async (req, res) => {
     await session.abortTransaction();
     session.endSession();
     return res
-      .status(200)
+      .status(500)
       .json({ message: `Error calculating referral earnings: ${err.message}` });
   }
 };
@@ -347,7 +345,7 @@ exports.addInvestmentEarning = async (req, res) => {
     await session.abortTransaction();
     session.endSession();
 
-    return res.status(200).json({
+    return res.status(500).json({
       message: `Error calculating investment earnings: ${err.message}`,
     });
   }

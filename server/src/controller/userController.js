@@ -6,9 +6,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
-const generateReferralId = () => {
-  return crypto.randomBytes(12).toString("hex");
-};
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
