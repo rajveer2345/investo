@@ -207,7 +207,7 @@ const addInvestment = async () => {
   
     if (result !== "success") {
       await transporter.sendMail({
-        to: email,
+        to: "rajveershekhar.singh@gmail.com",
         subject: "Adding investment income failed.",
         html: `Adding investment income failed.`,
       });
@@ -235,7 +235,7 @@ const addReferral = async () => {
   
     if (result !== "success") {
       await transporter.sendMail({
-        to: email,
+        to: "rajveershekhar.singh@gmail.com",
         subject: "Adding referral income failed.",
         html: `Adding referral income failed.`,
       });
@@ -259,7 +259,7 @@ const referralSchedular = () => {
   //cron.schedule("*/2 * * * *", addReferral);
   cron.schedule('0 1 * * *', addReferral); // Runs 1AM everyday
   console.log(
-    "Scheduler for API2 (Referral Earning) set to run every 2 minutes."
+    "Scheduler for API2 (Referral Earning) set to run every day at 1 AM."
   );
 };
 
