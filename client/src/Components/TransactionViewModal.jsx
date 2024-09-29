@@ -67,6 +67,17 @@ function TransactionModal({ transaction, setOpen }) {
             />
           </div>
           <div className="w-[300px]">
+            <label className="block font-semibold text-xs mb-1">Balance after transaction</label>
+            <input
+              className="w-full rounded-full h-8 px-2 border-solid border-2"
+              type="number"
+              name="amount"
+              value={transaction?.balanceAfter/100}
+              readOnly
+            />
+          </div>
+          {transaction.description &&
+            <div className="w-[300px]">
             <label className="block font-semibold text-xs mb-1">Description</label>
             <textarea
               className="w-full rounded-3xl h-10 px-2 border-solid border-2"
@@ -75,6 +86,8 @@ function TransactionModal({ transaction, setOpen }) {
               readOnly
             ></textarea>
           </div>
+          }
+          
           <div className="w-[300px]">
             <label className="block font-semibold text-xs mb-1">Date</label>
             <input

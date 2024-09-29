@@ -173,7 +173,7 @@ exports.verifyEmail = async (req, res) => {
 exports.getUserData = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("userid: ", userId);
+    //console.log("userid: ", userId);
     //const user = await User.findById(userId).select('-password -verificationToken');
 
     const user = await User.findById(userId)
@@ -185,7 +185,7 @@ exports.getUserData = async (req, res) => {
 
     if (!user) return res.status(200).json({ message: "User not found" });
 
-    console.log(user, "ghjkl");
+    //console.log(user, "ghjkl");
 
     res.status(200).json({
       message: "success",
@@ -232,7 +232,7 @@ exports.getUserReferrals = async (req, res) => {
 exports.fetchUserByEmail = async (req, res) => {
   try {
     const adminId = req.user.id;
-    console.log("fetchuser started", adminId);
+    //console.log("fetchuser started", adminId);
     const adminData = await User.findById(adminId);
     if (!adminData || adminData.role !== "admin") {
       return res.status(200).json({ message: "Invalid access" });

@@ -43,7 +43,7 @@ function Dashboard() {
     const iconsAdmin = [
         { id: 0, icon: <IoHome size={20} />, component: <MainAdmin userData={userData}/> },
 
-        { id: 1, icon: <FaMoneyBillTransfer size={20} />, component: <UserEdit/> },
+        { id: 1, icon: <FaMoneyBillTransfer size={20} />, component: <UserEdit adminId={userData._id}/> },
         { id: 2, icon: <MdWorkHistory size={20} />, component: <TransactionHistory role={userData.role}/> },
         { id: 3, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
     ];

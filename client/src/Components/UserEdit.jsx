@@ -5,7 +5,7 @@ import Loader from "../Components/Loader";
 import toast from "react-hot-toast";
 import TransactionModal from "./TransactionModal";
 
-function UserEdit() {
+function UserEdit({adminId}) {
   const [fetchedUserData, setFetchedUserData] = useState({});
   const [queryMode, setQueryMode] = useState("email");
   const [formView, setFormView] = useState("fetch");
@@ -66,7 +66,7 @@ function UserEdit() {
     let tData = {
       userId: fetchedUserData._id,
       from: "admin",
-      reference: "66dc4d299d7bc13a754f5461",
+      reference: adminId,
       type: "",
       category: "",
       amount: 0,
