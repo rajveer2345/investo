@@ -32,10 +32,10 @@ router.get('/transaction/get-user-transactions', authenticateToken, transactionC
 
 //news routes
 
-router.post('/news/create-news', newsController.createNews);
-router.get('/news/get-all-news', newsController.getAllNews);
-router.delete('/news/delete-news/:id', newsController.deleteNews);
-router.put('/news/update-news/:id', newsController.updateNews);
+router.post('/news/create-news', authenticateToken, adminValidation, newsController.createNews);
+router.get('/news/get-all-news', authenticateToken, newsController.getAllNews);
+router.delete('/news/delete-news/:id', authenticateToken, adminValidation, newsController.deleteNews);
+router.put('/news/update-news/:id', authenticateToken, adminValidation, newsController.updateNews);
 
 
 //test route
