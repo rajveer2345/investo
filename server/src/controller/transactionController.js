@@ -45,10 +45,16 @@ exports.adminAdd = async (req, res) => {
         return res.status(200).json({ message: "Insufficient balance." });
       }
 
-      if(category === "investment" && currentBalance-amount < 10000000 && currentBalance-amount !== 0){
+      if (
+        category === "investment" &&
+        currentBalance - amount < 10000000 &&
+        currentBalance - amount !== 0
+      ) {
         await session.abortTransaction();
         session.endSession();
-        return res.status(200).json({ message: "Not a valid investment withdrawal." });
+        return res
+          .status(200)
+          .json({ message: "Not a valid investment withdrawal." });
       }
     }
 
@@ -67,7 +73,8 @@ exports.adminAdd = async (req, res) => {
     }
 
     // Proceed with creating the transaction and updating the user's balance
-    const balanceAfter = currentBalance + amount;
+    const balanceAfter =
+      type === "deposit" ? currentBalance + amount : currentBalance - amount;
     const newTransaction = new Transaction({
       userId,
       from,
