@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
-
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
@@ -32,8 +31,8 @@ const transporter = nodemailer.createTransport({
 
 //     await User.findByIdAndUpdate(
 //       referredBy,
-//       { $push: { referrals: newUser._id } }, 
-//       { new: true } 
+//       { $push: { referrals: newUser._id } },
+//       { new: true }
 //     );
 
 //     const verificationLink = `${process.env.VERIFY_URL}${verificationToken}`;
@@ -97,7 +96,6 @@ exports.signup = async (req, res) => {
     });
 
     res.status(200).json({ message: "success" });
-
   } catch (err) {
     // If anything fails, abort the transaction and roll back changes
     await session.abortTransaction();
@@ -106,8 +104,6 @@ exports.signup = async (req, res) => {
     console.log("Error: ", err);
   }
 };
-
-
 
 exports.login = async (req, res) => {
   try {
@@ -143,7 +139,11 @@ exports.isExist = async (req, res) => {
     const userExists = await User.findById(userId).exec();
 
     if (userExists) {
-      res.status(200).json({ message: true });
+      if (userExists.investmentAmount >= 10000000) {
+        res.status(200).json({ message: true });
+      } else {
+        res.status(200).json({ message: false });
+      }
     } else {
       res.status(200).json({ message: false });
     }
@@ -176,10 +176,12 @@ exports.getUserData = async (req, res) => {
     console.log("userid: ", userId);
     //const user = await User.findById(userId).select('-password -verificationToken');
 
-    const user = await User.findById(userId).select("-password -verificationToken -isVerified").populate({
-      path: "referrals",
-      select: "name email investmentAmount -_id",
-    });
+    const user = await User.findById(userId)
+      .select("-password -verificationToken -isVerified")
+      .populate({
+        path: "referrals",
+        select: "name email investmentAmount -_id",
+      });
 
     if (!user) return res.status(200).json({ message: "User not found" });
 

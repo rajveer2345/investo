@@ -28,10 +28,9 @@ exports.adminAdd = async (req, res) => {
       return res.status(200).json({ message: "User or reference not found." });
     }
 
-    if (type === "withdraw") {
-      // Perform validation before the withdrawal
-      let currentBalance;
+    let currentBalance;
 
+    if (type === "withdraw") {
       if (category === "investment") {
         currentBalance = userExists.investmentAmount;
       } else if (category === "investmentEarning") {
@@ -40,16 +39,21 @@ exports.adminAdd = async (req, res) => {
         currentBalance = userExists.referralEarning;
       }
 
-      // Ensure the balance does not go negative
       if (currentBalance < amount) {
         await session.abortTransaction();
         session.endSession();
         return res.status(200).json({ message: "Insufficient balance." });
       }
+
+      if(category === "investment" && currentBalance-amount < 10000000 && currentBalance-amount !== 0){
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(200).json({ message: "Not a valid investment withdrawal." });
+      }
     }
 
     if (type === "deposit") {
-      let currentBalance = userExists.investmentAmount;
+      currentBalance = userExists.investmentAmount;
       if (
         currentBalance + amount < 10000000 ||
         currentBalance + amount > 15000000
@@ -63,12 +67,14 @@ exports.adminAdd = async (req, res) => {
     }
 
     // Proceed with creating the transaction and updating the user's balance
+    const balanceAfter = currentBalance + amount;
     const newTransaction = new Transaction({
       userId,
       from,
       reference,
       type,
       category,
+      balanceAfter,
       amount,
       description,
     });

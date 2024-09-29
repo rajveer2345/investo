@@ -26,14 +26,18 @@ const transactionSchema = new mongoose.Schema(
       enum: ["investment", "investmentEarning", "referralEarning"], // Restrict values to "Deposit" or "Withdrawal"
       required: true,
     },
+    balanceAfter: {
+      type: Number,
+      required: true
+    },
     amount: {
       type: Number,
       required: true,
-      min: 0, // Ensure that the amount is non-negative
+      min: 0, 
     },
     date: {
       type: Date,
-      default: Date.now, // Default to current date and time if not provided
+      default: Date.now,
     },
     description: {
       type: String,

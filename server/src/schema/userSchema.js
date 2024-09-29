@@ -1,62 +1,66 @@
-const mongoose = require('mongoose');
-const userSchema = new mongoose.Schema({
+const mongoose = require("mongoose");
+const userSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     role: {
-        type: String,
-        required: true,
-        default: 'user',
+      type: String,
+      required: true,
+      enum: ["user", "admin"],
+      default: "user",
     },
     investmentAmount: {
-        type: Number,
-        default: 0,
-        
-        max: 150000,
-    },
-    referralEarning: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0,
     },
     investmentEarning: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0,
+    },
+    referralEarning: {
+      type: Number,
+      default: 0,
     },
     referredBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user', // Reference to another User document
-        default: null,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user", // Reference to another User document
+      default: null,
     },
-    referrals: [{
+    referrals: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user', // Array of references to User documents
+        ref: "user", // Array of references to User documents
         default: [],
-    }],
+      },
+    ],
     userType: {
-        type: String,
-        enum: ['silver', 'gold', 'platinum'],
-        default: 'silver',
+      type: String,
+      enum: ["silver", "gold", "platinum"],
+      default: "silver",
     },
     isVerified: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
     verificationToken: {
-        type: String,
+      type: String,
     },
-}, {
-    timestamps: true
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const user = mongoose.model('user', userSchema);
+const user = mongoose.model("user", userSchema);
 module.exports = user;
