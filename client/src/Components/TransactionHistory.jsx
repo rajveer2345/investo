@@ -48,9 +48,10 @@ function TransactionHistory({ role }) {
     return new Date(date).toISOString().split("T")[0];
   };
 
-
+ 
 
   useEffect(() => {
+    console.log(new Date())
     switch (selectedFilter) {
       case "all":
         return setFtransactions(transactions);

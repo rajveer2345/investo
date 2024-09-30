@@ -50,14 +50,14 @@ function MainAdmin({ userData }) {
     fetchAnalytics();
   }, []);
 
-  const copyId = async () => {
-    try {
-      await navigator.clipboard.writeText(userData.referralId);
-      toast.success("Referral ID copied successfully.");
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-    }
-  };
+  // const copyId = async () => {
+  //   try {
+  //     await navigator.clipboard.writeText(userData.referralId);
+  //     toast.success("Referral ID copied successfully.");
+  //   } catch (err) {
+  //     console.error("Failed to copy: ", err);
+  //   }
+  // };
 
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";

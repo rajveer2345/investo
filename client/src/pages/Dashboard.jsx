@@ -16,6 +16,7 @@ import TransactionHistory from '../Components/TransactionHistory';
 import { getUserData, getReferralData } from '../api/user';
 import { FaHistory } from "react-icons/fa";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
+import News from '../Components/News';
 
 
 function Dashboard() {
@@ -45,7 +46,8 @@ function Dashboard() {
 
         { id: 1, icon: <FaMoneyBillTransfer size={20} />, component: <UserEdit adminId={userData._id}/> },
         { id: 2, icon: <MdWorkHistory size={20} />, component: <TransactionHistory role={userData.role}/> },
-        { id: 3, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
+        { id: 3, icon: <IoNotifications size={20} />, component: <News role={userData.role}/> },
+        { id: 4, icon: <IoPower size={20} />, component: <Logout props={{changeSelected, loading, setLoading}}/> },
     ];
 
     useEffect(()=>{
