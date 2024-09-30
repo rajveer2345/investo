@@ -83,7 +83,7 @@ const addReferralEarning = async () => {
 
         totalEarnings += referralEarningPerDay;
 
-        const balanceAfter = referral.referralEarning+referralEarningPerDay;
+        const balanceAfter = user.referralEarning+referralEarningPerDay;
 
         // Create a new transaction for each referral's earnings
         const newTransaction = new Transaction({
