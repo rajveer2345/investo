@@ -83,6 +83,8 @@ const addReferralEarning = async () => {
 
         totalEarnings += referralEarningPerDay;
 
+        const balanceAfter = referral.referralEarning+referralEarningPerDay;
+
         // Create a new transaction for each referral's earnings
         const newTransaction = new Transaction({
           userId: user._id,
@@ -91,6 +93,7 @@ const addReferralEarning = async () => {
           type: "deposit",
           category: "referralEarning",
           amount: referralEarningPerDay,
+          balanceAfter: balanceAfter,
           description: `Referral earnings based on referral's(${referral._id}) investment of ${referral.investmentAmount} at ${percentage}% rate.`,
         });
 
@@ -151,6 +154,8 @@ const addInvestmentEarning = async () => {
         (user.investmentAmount * percentage) / 100 / 365
       );
 
+      const balanceAfter = user.investmentEarning+earningPerDay;
+
       // Create a new transaction for the investment earning
       const newTransaction = new Transaction({
         userId: user._id,
@@ -159,6 +164,7 @@ const addInvestmentEarning = async () => {
         type: "deposit",
         category: "investmentEarning",
         amount: earningPerDay,
+        balanceAfter: balanceAfter,
         description: `Investment earnings calculated at ${percentage}% for an investment of ${user.investmentAmount}.`,
       });
 
@@ -199,17 +205,23 @@ const addInvestment = async () => {
   
       if (result === "success") {
         console.log('addInvestmentEarning returned success.');
+        await transporter.sendMail({
+          to: "rajveershekhar.singh@gmail.com",
+          subject: `Adding investment Earning successful.`,
+          html: `Adding investment Earning successful at ${new Date()} in ${attempt} attempt.`,
+        });
         break; // Exit the loop if success is returned
       } else {
         console.log('addInvestmentEarning returned failure, retrying...');
       }
+      await new Promise(resolve => setTimeout(resolve, 10000));
     }
   
     if (result !== "success") {
       await transporter.sendMail({
         to: "rajveershekhar.singh@gmail.com",
         subject: "Adding investment income failed.",
-        html: `Adding investment income failed.`,
+        html: `Adding investment income failed at ${new Date()}.`,
       });
       console.log('Max attempts reached. addInvestmentEarning Function did not succeed.');
     }
@@ -227,17 +239,24 @@ const addReferral = async () => {
   
       if (result === "success") {
         console.log('addReferralEarning returned success.');
+        await transporter.sendMail({
+          to: "rajveershekhar.singh@gmail.com",
+          subject: `Adding referral Earning successful.`,
+          html: `Adding referral Earning successful at ${new Date()} in ${attempt} attempt.`,
+        });
+        
         break; // Exit the loop if success is returned
       } else {
         console.log('addReferralEarning returned failure, retrying...');
       }
+      await new Promise(resolve => setTimeout(resolve, 10000));
     }
   
     if (result !== "success") {
       await transporter.sendMail({
         to: "rajveershekhar.singh@gmail.com",
         subject: "Adding referral income failed.",
-        html: `Adding referral income failed.`,
+        html: `Adding referral income failed at ${new Date()}.`,
       });
       console.log('Max attempts reached. addReferralEarning Function did not succeed.');
     }
@@ -247,19 +266,19 @@ const addReferral = async () => {
 // Schedule the first API call (e.g., every day at 12 AM)
 const investmentScheduler = () => {
   //cron.schedule("*/3 * * * *", addInvestment);
-  cron.schedule('0 0 * * *', addInvestment); // Runs at midnight
+  cron.schedule('50 9 * * *', addInvestment,{timezone: "Asia/Kolkata"});
 
   console.log(
-    "Scheduler for API1 (Investment Earning) set to run every day at 12 AM."
+    "Scheduler for API1 (Investment Earning) set to run every day."
   );
 };
 
-// Schedule the second API call (e.g., every 2 minutes)
+
 const referralSchedular = () => {
-  //cron.schedule("*/2 * * * *", addReferral);
-  cron.schedule('0 1 * * *', addReferral); // Runs 1AM everyday
+
+  cron.schedule('55 9 * * *', addReferral,{timezone: "Asia/Kolkata"}); 
   console.log(
-    "Scheduler for API2 (Referral Earning) set to run every day at 1 AM."
+    "Scheduler for API2 (Referral Earning) set to run every day"
   );
 };
 
