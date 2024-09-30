@@ -7,7 +7,7 @@ const apis = require("./src/routes/userRoutes");
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 app.use("/", apis);
 
 investmentScheduler();
