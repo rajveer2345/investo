@@ -266,7 +266,7 @@ const addReferral = async () => {
 // Schedule the first API call (e.g., every day at 12 AM)
 const investmentScheduler = () => {
   //cron.schedule("*/3 * * * *", addInvestment);
-  cron.schedule('0 16 * * *', addInvestment,{timezone: "Asia/Kolkata"});
+  cron.schedule('0 2 * * *', addInvestment,{timezone: "Asia/Kolkata"});
 
   console.log(
     "Scheduler for API1 (Investment Earning) set to run every day."
@@ -276,7 +276,7 @@ const investmentScheduler = () => {
 
 const referralSchedular = () => {
 
-  cron.schedule('5 16 * * *', addReferral,{timezone: "Asia/Kolkata"}); 
+  cron.schedule('0 3 * * *', addReferral,{timezone: "Asia/Kolkata"}); 
   console.log(
     "Scheduler for API2 (Referral Earning) set to run every day"
   );
