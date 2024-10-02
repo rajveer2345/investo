@@ -82,7 +82,7 @@ const TransactionTable = ({ transactions, role }) => {
                   {transaction?.amount/100}
                 </td>
                 <td className="border px-2 py-2 text-sm font-normal">
-                  {new Date(transaction?.date).toLocaleString()}
+                  {new Date(transaction?.date).toLocaleString("en-GB")}
                 </td>
                 <td className="border px-2 py-2">
                   <button

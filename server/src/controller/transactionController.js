@@ -215,156 +215,157 @@ exports.getUserTransactions = async (req, res) => {
   }
 };
 
-exports.addReferralEarning = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
+// exports.addReferralEarning = async (req, res) => {
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
 
-  try {
-    // Find users who have referrals
-    const users = await User.find({
-      referrals: { $exists: true, $not: { $size: 0 } },
-    }).session(session);
+//   try {
+//     // Find users who have referrals
+//     const users = await User.find({
+//       referrals: { $exists: true, $not: { $size: 0 } },
+//     }).session(session);
 
-    for (const user of users) {
-      let totalEarnings = 0;
-      const referralCount = user.referrals.length;
-      let percentage = 36; // Default percentage is 3%
+//     for (const user of users) {
+//       let totalEarnings = 0;
+//       const referralCount = user.referrals.length;
+//       let percentage = 36; // Default percentage is 3%
 
-      // Determine the percentage based on the referral count
-      if (referralCount >= 4 && referralCount <= 9) percentage = 48;
-      else if (referralCount >= 10 && referralCount <= 27) percentage = 60;
-      else if (referralCount >= 28 && referralCount <= 81) percentage = 72;
-      else if (referralCount >= 82 && referralCount <= 243) percentage = 84;
-      else if (referralCount >= 244 && referralCount <= 729) percentage = 96;
-      else if (referralCount >= 730) percentage = 108;
+//       // Determine the percentage based on the referral count
+//       if (referralCount >= 4 && referralCount <= 9) percentage = 48;
+//       else if (referralCount >= 10 && referralCount <= 27) percentage = 60;
+//       else if (referralCount >= 28 && referralCount <= 81) percentage = 72;
+//       else if (referralCount >= 82 && referralCount <= 243) percentage = 84;
+//       else if (referralCount >= 244 && referralCount <= 729) percentage = 96;
+//       else if (referralCount >= 730) percentage = 108;
 
-      // Iterate through each referral and calculate earnings
-      for (const referralId of user.referrals) {
-        const referral = await User.findById(referralId).session(session);
-        if (!referral) continue;
-        if (referral.investmentAmount < 10000000) continue;
+//       // Iterate through each referral and calculate earnings
+//       for (const referralId of user.referrals) {
+//         const referral = await User.findById(referralId).session(session);
+//         if (!referral) continue;
+//         if (referral.investmentAmount < 10000000) continue;
 
-        const referralEarningPerDay = Math.round(
-          (referral.investmentAmount * percentage) / 100 / 365
-        );
+//         const referralEarningPerDay = Math.round(
+//           (referral.investmentAmount * percentage) / 100 / 365
+//         );
 
-        if (referralEarningPerDay === 0) {
-          continue;
-        }
+//         if (referralEarningPerDay === 0) {
+//           continue;
+//         }
 
-        totalEarnings += referralEarningPerDay;
+//         totalEarnings += referralEarningPerDay;
 
-        // Create a new transaction for each referral's earnings
-        const newTransaction = new Transaction({
-          userId: user._id,
-          from: "system",
-          reference: referral._id, // Referral's ObjectId (whose investmentAmount is being used)
-          type: "deposit",
-          category: "referralEarning",
-          amount: referralEarningPerDay,
-          description: `Referral earnings based on referral's(${referral._id}) investment of ${referral.investmentAmount} at ${percentage}% rate.`,
-        });
+//         // Create a new transaction for each referral's earnings
+//         const newTransaction = new Transaction({
+//           userId: user._id,
+//           from: "system",
+//           reference: referral._id, // Referral's ObjectId (whose investmentAmount is being used)
+//           type: "deposit",
+//           category: "referralEarning",
+//           amount: referralEarningPerDay,
+//           description: `Referral earnings based on referral's(${referral._id}) investment of ${referral.investmentAmount} at ${percentage}% rate.`,
+//         });
 
-        // Save the transaction
-        const savedTransaction = await newTransaction.save({ session });
-        if (!savedTransaction) throw new Error("Transaction saving failed");
-      }
+//         // Save the transaction
+//         const savedTransaction = await newTransaction.save({ session });
+//         if (!savedTransaction) throw new Error("Transaction saving failed");
+//       }
 
-      // Update user's referral earnings after calculating totalEarnings
-      const updatedUser = await User.findByIdAndUpdate(
-        user._id,
-        { $inc: { referralEarning: totalEarnings } }, // Increment referralEarning by totalEarnings
-        { new: true, session }
-      );
+//       // Update user's referral earnings after calculating totalEarnings
+//       const updatedUser = await User.findByIdAndUpdate(
+//         user._id,
+//         { $inc: { referralEarning: totalEarnings } }, // Increment referralEarning by totalEarnings
+//         { new: true, session }
+//       );
 
-      if (!updatedUser)
-        throw new Error("Failed to update user's referral earnings");
-    }
+//       if (!updatedUser)
+//         throw new Error("Failed to update user's referral earnings");
+//     }
 
-    // Commit the transaction
-    await session.commitTransaction();
-    session.endSession();
-    return res.status(200).json({
-      message: "success",
-    });
-  } catch (err) {
-    // Rollback in case of failure
-    await session.abortTransaction();
-    session.endSession();
-    return res
-      .status(500)
-      .json({ message: `Error calculating referral earnings: ${err.message}` });
-  }
-};
+//     // Commit the transaction
+//     await session.commitTransaction();
+//     session.endSession();
+//     return res.status(200).json({
+//       message: "success",
+//     });
+//   } catch (err) {
+//     // Rollback in case of failure
+//     await session.abortTransaction();
+//     session.endSession();
+//     return res
+//       .status(500)
+//       .json({ message: `Error calculating referral earnings: ${err.message}` });
+//   }
+// };
 
-exports.addInvestmentEarning = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
+// exports.addInvestmentEarning = async (req, res) => {
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
 
-  try {
-    // Fetch all users with an investmentAmount >= 10000000
-    const users = await User.find({
-      investmentAmount: { $gte: 10000000 },
-    }).session(session);
+//   try {
+//     // Fetch all users with an investmentAmount >= 10000000
+//     const users = await User.find({
+//       investmentAmount: { $gte: 10000000 },
+//     }).session(session);
 
-    for (const user of users) {
-      let percentage = 0;
+//     for (const user of users) {
+//       let percentage = 0;
 
-      // Determine the percentage based on the investmentAmount
-      if (
-        user.investmentAmount >= 10000000 &&
-        user.investmentAmount < 15000000
-      ) {
-        percentage = 180;
-      } else if (user.investmentAmount >= 15000000) {
-        percentage = 240;
-      }
+//       // Determine the percentage based on the investmentAmount
+//       if (
+//         user.investmentAmount >= 10000000 &&
+//         user.investmentAmount < 15000000
+//       ) {
+//         percentage = 180;
+//       } else if (user.investmentAmount >= 15000000) {
+//         percentage = 240;
+//       }
 
-      // Calculate the earning amount
-      const earningPerDay = Math.round(
-        (user.investmentAmount * percentage) / 100 / 365
-      );
+//       // Calculate the earning amount
+//       const earningPerDay = Math.round(
+//         (user.investmentAmount * percentage) / 100 / 365
+//       );
 
-      // Create a new transaction for the investment earning
-      const newTransaction = new Transaction({
-        userId: user._id,
-        from: "system",
-        reference: user._id,
-        type: "deposit",
-        category: "investmentEarning",
-        amount: earningPerDay,
-        description: `Investment earnings calculated at ${percentage}% for an investment of ${user.investmentAmount}.`,
-      });
+//       // Create a new transaction for the investment earning
+//       const newTransaction = new Transaction({
+//         userId: user._id,
+//         from: "system",
+//         reference: user._id,
+//         type: "deposit",
+//         category: "investmentEarning",
+//         amount: earningPerDay,
+//         description: `Investment earnings calculated at ${percentage}% for an investment of ${user.investmentAmount}.`,
+//       });
 
-      // Save the transaction
-      const savedTransaction = await newTransaction.save({ session });
-      if (!savedTransaction) throw new Error("Transaction saving failed");
+//       // Save the transaction
+//       const savedTransaction = await newTransaction.save({ session });
+//       if (!savedTransaction) throw new Error("Transaction saving failed");
 
-      // Update user's investmentEarning field
-      await User.findByIdAndUpdate(
-        user._id,
-        { $inc: { investmentEarning: earningPerDay } },
-        { session }
-      );
-    }
+//       // Update user's investmentEarning field
+//       await User.findByIdAndUpdate(
+//         user._id,
+//         { $inc: { investmentEarning: earningPerDay } },
+//         { session }
+//       );
+//     }
 
-    // Commit the transaction
-    await session.commitTransaction();
-    session.endSession();
+//     // Commit the transaction
+//     await session.commitTransaction();
+//     session.endSession();
 
-    return res.status(200).json({ message: "success" });
-  } catch (err) {
-    // Abort the transaction in case of any error
-    await session.abortTransaction();
-    session.endSession();
+//     return res.status(200).json({ message: "success" });
+//   } catch (err) {
+//     // Abort the transaction in case of any error
+//     await session.abortTransaction();
+//     session.endSession();
 
-    return res.status(500).json({
-      message: `Error calculating investment earnings: ${err.message}`,
-    });
-  }
-};
+//     return res.status(500).json({
+//       message: `Error calculating investment earnings: ${err.message}`,
+//     });
+//   }
+// };
 
 ///////////////////////////example Calculation///////////////////////
+
 exports.maths = (req, res) => {
   const interestRate = req.params.rate;
   const amount = req.params.amount;

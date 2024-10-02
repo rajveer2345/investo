@@ -7,6 +7,8 @@ const adminValidation=require("../auth/adminValidate")
 const authenticateToken = require("../auth/auth")
 const APIKeyValidation = require("../auth/APIKeyValidation")
 
+const manualSchedular=require("../emergencyScheduler/manualSchedular");
+
 
 //user Routes
 
@@ -25,7 +27,6 @@ router.get('/user/get-analytics',authenticateToken,adminValidation,userControlle
 //transaction routes
 
 router.post('/transaction/admin-add',  authenticateToken, adminValidation, transactionController.adminAdd) //admin route
-
 router.get('/transaction/get-admin-transactions', authenticateToken, adminValidation, transactionController.getAdminTransactions) //admin route
 router.get('/transaction/get-user-transactions', authenticateToken, transactionController.getUserTransactions)
 
@@ -38,9 +39,10 @@ router.delete('/news/delete-news/:id', authenticateToken, adminValidation, newsC
 router.put('/news/update-news/:id', authenticateToken, adminValidation, newsController.updateNews);
 
 
-//test route
-router.post('/transaction/referral-earning/system-add',APIKeyValidation, transactionController.addReferralEarning);
-router.post('/transaction/investment-earning/system-add',APIKeyValidation, transactionController.addInvestmentEarning);
+//Emergency schedular routes
+
+router.post('/transaction/investment-earning/system-add',APIKeyValidation, manualSchedular.addInvestmentManual);
+router.post('/transaction/referral-earning/system-add',APIKeyValidation, manualSchedular.addReferralManual);
 
 
 
