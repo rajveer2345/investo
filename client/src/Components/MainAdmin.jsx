@@ -16,9 +16,12 @@ import { BiSolidBadgeDollar } from "react-icons/bi";
 import { getUserCount, getAnalytics } from "../api/user";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
+import { getAllNews } from "../api/news";
+import { FaStar } from "react-icons/fa";
 
 function MainAdmin({ userData }) {
   const navigate = useNavigate();
+  const [newsData, setNewsData] = useState([]);
   const [userCount, setUserCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [totalInvestment, setTotalInvestment] = useState(0);
@@ -28,6 +31,15 @@ function MainAdmin({ userData }) {
     totalInvestmentEarning: 0,
     totalUsers: 0,
   });
+
+  const getNews = async () => {
+    const res = await getAllNews();
+    if (res.message === "success") {
+      setNewsData(res.data);
+    } else {
+      toast.error("Somethimg went wrong.");
+    }
+  };
 
   async function fetchAnalytics() {
     setLoading(true);
@@ -48,7 +60,12 @@ function MainAdmin({ userData }) {
 
   useEffect(() => {
     fetchAnalytics();
+    getNews();
   }, []);
+
+  useEffect(() => {
+    console.log(newsData, "newsdata");
+  }, [newsData]);
 
   // const copyId = async () => {
   //   try {
@@ -104,12 +121,11 @@ function MainAdmin({ userData }) {
             <div className="px-8 bg-tertiary rounded-3xl flex flex-col items-center justify-center h-48 w-60">
               <h5 className="text-xs font-semibold">Total Investment</h5>
               <h1 className="text-4xl font-semibold mt-5">
-                ${analyticsData.totalInvestment/100}
+                ${analyticsData.totalInvestment / 100}
               </h1>
 
               <h6 className="font-normal text-xs mt-2">
-                + <span className="text-xs font-semibold">$2508</span>{" "}
-                last week
+                + <span className="text-xs font-semibold">$2508</span> last week
               </h6>
               <div className="flex mt-3">
                 <div className="mx-2 bg-black text-xs text-white font-normal w-24 h-12 rounded-full flex justify-center items-center">
@@ -127,8 +143,7 @@ function MainAdmin({ userData }) {
               </h1>
 
               <h6 className="font-normal text-xs mt-2">
-                + <span className="text-xs font-semibold">$2508</span>{" "}
-                last week
+                + <span className="text-xs font-semibold">$2508</span> last week
               </h6>
               <div className="flex mt-3">
                 <div className="mx-2 bg-black text-xs text-white font-normal w-24 h-12 rounded-full flex justify-center items-center">
@@ -152,9 +167,8 @@ function MainAdmin({ userData }) {
                     ${analyticsData.totalReferralEarning}
                   </h2>
                   <h6 className="font-normal text-xs invisible">
-                    +{" "}
-                    <span className="text-xs font-semibold">$2508</span>{" "}
-                    last week
+                    + <span className="text-xs font-semibold">$2508</span> last
+                    week
                   </h6>
                 </div>
               </div>
@@ -167,12 +181,11 @@ function MainAdmin({ userData }) {
                 <div className=" flex flex-col justify-center items-start w-full ps-4">
                   <h5 className="text-xs font-semibold">From Investments</h5>
                   <h2 className="text-3xl">
-                    ${analyticsData.totalInvestmentEarning/100}
+                    ${analyticsData.totalInvestmentEarning / 100}
                   </h2>
                   <h6 className="font-normal text-xs invisible">
-                    +{" "}
-                    <span className="text-xs font-semibold">$2508</span>{" "}
-                    last week
+                    + <span className="text-xs font-semibold">$2508</span> last
+                    week
                   </h6>
                 </div>
               </div>
@@ -228,7 +241,7 @@ function MainAdmin({ userData }) {
                       </div>
                       <div className="w-full text-center ms-3">
                         <h5 className="text-xs font-medium">
-                          {referral?.investmentAmount/100}
+                          {referral?.investmentAmount / 100}
                         </h5>
                       </div>
                     </div>
@@ -347,85 +360,24 @@ function MainAdmin({ userData }) {
             <div id="events" className="flex flex-col gap-3">
               <div className="text-xs  font-semibold">Latest News</div>
 
-              <div className="w-full bg-tertiary rounded-3xl flex p-3">
-                <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                  <img className="w-8 h-8 rounded-full" src={news} alt="" />
-                </div>
-                <div className="w-full text-wrap ms-3">
-                  <h5 className="text-xs font-medium">
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam.
-                  </h5>
-                </div>
-              </div>
+              {newsData.map((item, index) => (
+                <div className="w-full bg-tertiary rounded-xl flex p-3 border shadow-md">
+                  <div className="flex items-start">
+                    <div className="text-white bg-secondary p-1 rounded-full shadow-lg shadow-secondary">
+                      {/* <FaStar size={16} /> */}
+                      <div class="star mx-auto bg-white w-5 h-5"></div>
+                    </div>
+                    
+                  </div>
 
-              <div className="w-full bg-tertiary rounded-3xl flex p-3">
-                <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                  <img className="w-8 h-8 rounded-full" src={news} alt="" />
+                  <div className="w-full text-wrap ms-3">
+                    <h5 className="text-xs font-medium">{item?.title}</h5>
+                    <div className="border border-gray-400 my-1"></div>
+                    <p className="text-xs font-normal">{item?.content}</p>
+                  </div>
                 </div>
-                <div className="w-full text-wrap ms-3">
-                  <h5 className="text-xs font-medium">
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam.
-                  </h5>
-                </div>
-              </div>
+              ))}
 
-              <div className="w-full bg-tertiary rounded-3xl flex p-3">
-                <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                  <img className="w-8 h-8 rounded-full" src={news} alt="" />
-                </div>
-                <div className="w-full text-wrap ms-3">
-                  <h5 className="text-xs font-medium">
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam.
-                  </h5>
-                </div>
-              </div>
-              <div className="w-full bg-primary rounded-3xl flex p-3">
-                <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                  <img className="w-8 h-8 rounded-full" src={news} alt="" />
-                </div>
-                <div className="w-full text-wrap ms-3">
-                  <h5 className="text-xs font-medium">
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam.
-                  </h5>
-                </div>
-              </div>
-              <div className="w-full bg-primary rounded-3xl flex p-3">
-                <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                  <img className="w-8 h-8 rounded-full" src={news} alt="" />
-                </div>
-                <div className="w-full text-wrap ms-3">
-                  <h5 className="text-xs font-medium">
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam.
-                  </h5>
-                </div>
-              </div>
-              <div className="w-full bg-gradient-to-t from-[#ACD790] to-primary rounded-3xl flex p-3">
-                <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                  <img className="w-8 h-8 rounded-full" src={news} alt="" />
-                </div>
-                <div className="w-full text-wrap ms-3">
-                  <h5 className="text-xs font-medium">
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam.
-                  </h5>
-                </div>
-              </div>
-              <div className="w-full bg-gradient-to-t from-[#ACD790] to-primary rounded-3xl flex p-3">
-                <div className="w-8 h-8 rounded-full bg-white min-w-8">
-                  <img className="w-8 h-8 rounded-full" src={news} alt="" />
-                </div>
-                <div className="w-full text-wrap ms-3">
-                  <h5 className="text-xs font-medium">
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam.
-                  </h5>
-                </div>
-              </div>
             </div>
           </div>
         </div>

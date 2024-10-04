@@ -14,12 +14,15 @@ import Logout from '../Components/Logout';
 import UserEdit from '../Components/UserEdit';
 import TransactionHistory from '../Components/TransactionHistory';
 import { getUserData, getReferralData } from '../api/user';
+import { getAllNews } from '../api/news';
 import { FaHistory } from "react-icons/fa";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import News from '../Components/News';
+import toast from "react-hot-toast";
 
 
 function Dashboard() {
+
     const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState({})
     const navigate = useNavigate();
@@ -31,7 +34,7 @@ function Dashboard() {
 
     
     const icons = [
-        { id: 0, icon: <IoHome size={20} />, component: <Main userData={userData}/> },
+        { id: 0, icon: <IoHome size={20} />, component: <Main userData={userData} /> },
         //{ id: 1, icon: <IoNotifications size={20} />, component: '<div>zero</div>' },
         //{ id: 2, icon: <IoPersonAdd size={20} />, component: <UserEdit/> },
         { id: 1, icon: <MdWorkHistory size={20} />, component: <TransactionHistory role={userData.role}/> },
@@ -42,7 +45,7 @@ function Dashboard() {
     
     
     const iconsAdmin = [
-        { id: 0, icon: <IoHome size={20} />, component: <MainAdmin userData={userData}/> },
+        { id: 0, icon: <IoHome size={20} />, component: <MainAdmin userData={userData} /> },
 
         { id: 1, icon: <FaMoneyBillTransfer size={20} />, component: <UserEdit adminId={userData._id}/> },
         { id: 2, icon: <MdWorkHistory size={20} />, component: <TransactionHistory role={userData.role}/> },
@@ -65,7 +68,11 @@ function Dashboard() {
             }
 
         }
+
+
+
         getUserDetails();
+   
 
     },[])
 
@@ -77,23 +84,19 @@ function Dashboard() {
 
                 <ul className='space-y-3'>
                     <li className='w-8 mb-10'><img src={logo} alt="" /></li>
-                    
-                    
+                       
                     {(userData?.role === "admin"? (iconsAdmin) : (icons)).map((item) => (
                         <li key={item.id} onClick={()=>setSelected(item.id)} className={`text-black h-10 w-10 rounded-full flex justify-center items-center ${selected===item.id ? 'bg-primary' : 'bg-none'}`}>{item.icon}</li>
                     ))}
 
                 </ul>
 
-
             </div>
             <div id='margin sidebar' className='sm:w-20 w-16 sm:min-w-20 min-w-16 h-screen bg-tertiary'>
-
 
             </div>
             {(userData?.role === "admin"? (iconsAdmin) : (icons))[selected].component}
        
-
         </div>
     )
 }

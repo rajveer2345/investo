@@ -10,18 +10,18 @@ exports.createNews = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "News created successfully", news: savedNews });
+      .json({ message: "success", news: savedNews });
   } catch (err) {
-    res.status(500).json({ message: `Server error: ${err.message}` });
+    res.status(200).json({ message: `Server error: ${err.message}` });
   }
 };
 
 exports.getAllNews = async (req, res) => {
   try {
     const newsList = await News.find();
-    res.status(200).json(newsList);
+    res.status(200).json({message:"success",data:newsList});
   } catch (err) {
-    res.status(500).json({ message: `Server error: ${err.message}` });
+    res.status(200).json({ message: `Server error: ${err.message}` });
   }
 };
 
@@ -35,9 +35,9 @@ exports.deleteNews = async (req, res) => {
         return res.status(200).json({ message: 'News not found' });
       }
   
-      res.status(200).json({ message: 'News deleted successfully' });
+      res.status(200).json({ message: 'success' });
     } catch (err) {
-      res.status(500).json({ message: `Server error: ${err.message}` });
+      res.status(200).json({ message: `Server error: ${err.message}` });
     }
   };
 
@@ -57,9 +57,9 @@ exports.deleteNews = async (req, res) => {
         return res.status(200).json({ message: 'News not found' });
       }
   
-      res.status(200).json({ message: 'News updated successfully', news: updatedNews });
+      res.status(200).json({ message: 'success'});
     } catch (err) {
-      res.status(500).json({ message: `Server error: ${err.message}` });
+      res.status(200).json({ message: `Server error: ${err.message}` });
     }
   };
   
