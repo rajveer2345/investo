@@ -177,7 +177,7 @@ const addInvestment = async () => {
       if (result === "success") {
         console.log('addInvestmentEarning returned success.');
         await transporter.sendMail({
-          to: "rajveershekhar.singh@gmail.com",
+          to: "agoldalliance0278@gmail.com",
           subject: `Adding investment Earning successful.`,
           html: `Adding investment Earning successful at ${new Date().toLocaleString("en-GB", { timeZone: "Asia/Kolkata" })} in ${attempt} attempt.`,
         });
@@ -190,7 +190,7 @@ const addInvestment = async () => {
   
     if (result !== "success") {
       await transporter.sendMail({
-        to: "rajveershekhar.singh@gmail.com",
+        to: "agoldalliance0278@gmail.com",
         subject: "Adding investment income failed.",
         html: `Adding investment income failed at ${new Date().toLocaleString("en-GB", { timeZone: "Asia/Kolkata" })}.`,
       });
@@ -211,7 +211,7 @@ const addReferral = async () => {
       if (result === "success") {
         console.log('addReferralEarning returned success.');
         await transporter.sendMail({
-          to: "rajveershekhar.singh@gmail.com",
+          to: "agoldalliance0278@gmail.com",
           subject: `Adding referral Earning successful.`,
           html: `Adding referral Earning successful at ${new Date().toLocaleString("en-GB", { timeZone: "Asia/Kolkata" })} in ${attempt} attempt.`,
         });
@@ -225,7 +225,7 @@ const addReferral = async () => {
   
     if (result !== "success") {
       await transporter.sendMail({
-        to: "rajveershekhar.singh@gmail.com",
+        to: "agoldalliance0278@gmail.com",
         subject: "Adding referral income failed.",
         html: `Adding referral income failed at ${new Date().toLocaleString("en-GB", { timeZone: "Asia/Kolkata" })}.`,
       });
