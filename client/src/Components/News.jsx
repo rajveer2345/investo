@@ -1,4 +1,5 @@
 import React from "react";
+import NewsBlock from "./NewsBlock";
 
 function News({ role }) {
   return (
@@ -17,6 +18,9 @@ function News({ role }) {
           <button className="h-10 w-10 bg-secondary text-white text-xl font-medium rounded-full">
             +
           </button>
+        </div>
+        <div className="flex flex-col gap-2 py-3 px-3">
+          <NewsBlock />
         </div>
       </div>
     </>
